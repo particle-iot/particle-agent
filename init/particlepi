@@ -1,0 +1,52 @@
+#!/bin/sh
+# Start/stop the Particle Pi agent
+#
+### BEGIN INIT INFO
+# Provides:          particlepi
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Manages Particle firmware
+### END INIT INFO
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+DESC=particlepi
+
+DAEMON=/usr/local/bin/particlepi
+PIDFILE=/var/run/particlepi.pid
+
+# Load helper functions
+. /lib/lsb/init-functions
+
+# Exit if the package is not installed
+test -x $DAEMON || exit 5
+
+#
+# Function that starts the daemon/service
+case $1 in
+  start)
+    log_daemon_msg "Starting $DESC"
+    start-stop-daemon --start --pidfile $PIDFILE --exec $DAEMON
+    log_end_msg $?
+    ;;
+  stop)
+    log_daemon_msg "Stopping $DESC"
+    start-stop-daemon --stop --pidfile $PIDFILE
+    log_end_msg $?
+    rm -f $PIDFILE
+    ;;
+  restart)
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  status)
+    status_of_proc "$DAEMON" "$DESC" && exit 0 || exit $?
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart|status}"
+    exit 2
+    ;;
+esac
+
+exit 0

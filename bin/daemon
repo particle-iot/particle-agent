@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby -Ilib
+
+require 'agent'
+
+options = {}
+
+Agent.new(options).run!
+
+#Process.daemon

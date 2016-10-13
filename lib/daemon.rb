@@ -1,3 +1,6 @@
+# Put the current process in the background, manage pid file and
+# redirect output to a log file
+#
 # Adapted from https://github.com/jakesgordon/ruby-sample-daemon
 # Copyright (c) 2014, 2015, 2016, Jake Gordon, licensed under the MIT license.
 require 'fileutils'
@@ -116,7 +119,7 @@ class Daemon
   end
 
   def trap_signals
-    [:QUIT, :INT].each do |signal|
+    [:TERM, :INT].each do |signal|
       trap signal do
         # Tell main loop to stop
         @quit = true

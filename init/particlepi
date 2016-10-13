@@ -36,7 +36,7 @@ case $1 in
     ;;
   stop)
     log_daemon_msg "Stopping $DESC" "$NAME"
-    start-stop-daemon -v --stop --signal QUIT --retry 30 --quiet --oknodo --pidfile $PIDFILE
+    start-stop-daemon -v --stop --signal TERM --retry 30 --quiet --oknodo --pidfile $PIDFILE
     log_end_msg $?
     rm -f $PIDFILE
     ;;

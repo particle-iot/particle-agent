@@ -1,5 +1,7 @@
 # Adapted from https://github.com/jakesgordon/ruby-sample-daemon
 # Copyright (c) 2014, 2015, 2016, Jake Gordon, licensed under the MIT license.
+require 'fileutils'
+
 class Daemon
   attr_reader :options, :quit
 
@@ -114,9 +116,11 @@ class Daemon
   end
 
   def trap_signals
-    trap :QUIT do
-      # Tell main loop to stop
-      @quit = true
+    [:QUIT, :INT].each do |signal|
+      trap signal do
+        # Tell main loop to stop
+        @quit = true
+      end
     end
   end
 end

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+$LOAD_PATH.unshift File.expand_path("../../lib", File.realdirpath(__FILE__))
 
 require 'optparse'
 
@@ -23,9 +23,9 @@ op.separator "Usage: daemon [options]"
 op.separator ""
 
 op.separator "Process options:"
-op.on("-d", "--daemonize",   daemonize_help) {         options[:daemonize] = true  }
-op.on("-p", "--pid PIDFILE", pidfile_help)   { |value| options[:pidfile]   = value }
-op.on("-l", "--log LOGFILE", logfile_help)   { |value| options[:logfile]   = value }
+op.on("-d", "--daemon",   daemonize_help) {         options[:daemonize] = true  }
+op.on("-p", "--pidfile PIDFILE", pidfile_help)   { |value| options[:pidfile]   = value }
+op.on("-l", "--logfile LOGFILE", logfile_help)   { |value| options[:logfile]   = value }
 op.separator ""
 
 op.separator "Ruby options:"

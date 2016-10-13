@@ -1,4 +1,6 @@
-#!/usr/bin/env ruby -Ilib
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
 
 require 'optparse'
 
@@ -38,7 +40,10 @@ op.separator ""
 
 op.parse!(ARGV)
 
+require 'daemon'
 require 'agent'
-Agent.new(options).run!
+Daemon.new(options).run! do |daemon|
+  Agent.new.run!(daemon)
+end
 
 #Process.daemon

@@ -6,11 +6,18 @@
 require 'fileutils'
 
 class Daemon
-  attr_reader :options, :quit
+  attr_reader :options
+  attr_accessor :exit_with_error
 
-  def initialize(options)
+  def initialize(options = {})
     @options = options
     expand_directories
+
+    # Allow swapping out the exit behavior for testing
+    @exit_with_error = lambda do |message|
+      $stderr.puts message
+      exit 1
+    end
   end
 
   def run!
@@ -26,12 +33,16 @@ class Daemon
     end
 
     # Start the worker, passing the daemon install to be able to exit
-    # gracefully by checking daemon.quit
+    # gracefully by checking daemon.quit?
     yield(self) if block_given?
   end
 
   def quit!
     @quit = true
+  end
+
+  def quit?
+    @quit
   end
 
   def daemonize?
@@ -76,15 +87,14 @@ class Daemon
     return unless pidfile
     case pid_status(pidfile)
     when :running, :not_owned
-      puts "The agent is already running. Check #{pidfile}"
-      exit 1
+      exit_with_error.call "The agent is already running. Check #{pidfile}"
     when :dead
       File.delete(pidfile)
     end
   end
 
   def pid_status(pidfile)
-    return :exited unless File.exists?(pidfile)
+    return :exited unless File.exist?(pidfile)
 
     pid = ::File.read(pidfile).to_i
     return :dead if pid == 0
@@ -119,7 +129,7 @@ class Daemon
   end
 
   def trap_signals
-    [:TERM, :INT].each do |signal|
+    [:QUIT, :TERM, :INT].each do |signal|
       trap signal do
         # Tell main loop to stop
         @quit = true

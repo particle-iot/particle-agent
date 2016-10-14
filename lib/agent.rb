@@ -1,7 +1,7 @@
 class Agent
   def run!(daemon)
     puts "Starting firmware"
-    until daemon.quit
+    until daemon.quit?
       run_firmware
     end
     puts "Quitting gracefully"

@@ -12,6 +12,7 @@ class Daemon
   def initialize(options = {})
     @options = options
     expand_directories
+    @quit = false
 
     # Allow swapping out the exit behavior for testing
     @exit_with_error = lambda do |message|
@@ -131,8 +132,13 @@ class Daemon
   def trap_signals
     [:QUIT, :TERM, :INT].each do |signal|
       trap signal do
-        # Tell main loop to stop
-        @quit = true
+        unless @quit
+          puts "Got signal to quit gracefully"
+          # Tell main loop to stop
+          @quit = true
+          # Kill subprocesses
+          Process.kill("QUIT", 0)
+        end
       end
     end
   end

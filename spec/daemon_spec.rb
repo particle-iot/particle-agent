@@ -37,7 +37,7 @@ describe Daemon do
     assert_match (/The agent is already running/), err.message
   end
 
-  it "writes a pidfile" do
+  it "writes the pid to a pidfile" do
     pidfile = Tempfile.new('test-daemon')
     pidfile.close
     daemon = Daemon.new(pidfile: pidfile.path)
@@ -46,6 +46,19 @@ describe Daemon do
 
     pid = IO.read(pidfile.path)
     assert_equal Process.pid, pid.to_i
+  end
+
+  it "deletes the pid file at exit" do
+    pidfile = Tempfile.new('test-daemon')
+    pidfile.close
+    daemon = Daemon.new(pidfile: pidfile.path)
+
+    fork do
+      daemon.run!
+    end
+    Process.wait
+
+    assert_equal false, File::exist?(pidfile.path)
   end
 
   it "daemonizes" do
@@ -62,6 +75,7 @@ describe Daemon do
       end
     end
 
+    Process.wait
     wr.close
     assert_equal "Done", rd.read
   end
@@ -69,19 +83,31 @@ describe Daemon do
   it "traps signals and quits the subtask" do
     pid_rd, pid_wr = IO.pipe
     rd, wr = IO.pipe
-    daemon = Daemon.new(daemonize: true)
+    daemon = Daemon.new(daemonize: true, logfile: "tmp.log")
 
     fork do
       daemon.run! do |d|
         pid_rd.close
         pid_wr.write Process.pid
         pid_wr.close
-        rd.close
+
+        # Subtask that doen't quit until it receives a signal
+        fork do
+          subtask_quit = false
+          
+          trap(:QUIT) { subtask_quit = true }
+          until subtask_quit
+            sleep 0.01
+          end
+
+          rd.close
+          wr.write "Quit"
+        end
 
         until d.quit?
           sleep 0.01
         end
-        wr.write "Quit"
+        Process.wait
       end
     end
 
@@ -91,6 +117,7 @@ describe Daemon do
 
     wr.close
     assert_equal "Quit", rd.read
+    Process.wait
   end
 
   it "logs to a file" do
@@ -111,8 +138,8 @@ describe Daemon do
     wr.close
     rd.read
 
+    Process.wait
     log = IO.read(logfile.path)
     assert_equal "This is a log\n", log
   end
-
 end

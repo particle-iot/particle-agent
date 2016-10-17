@@ -1,0 +1,7 @@
+#!/usr/bin/ruby
+
+$LOAD_PATH.unshift File.expand_path("../../lib", File.realdirpath(__FILE__))
+
+require 'particle_pi/cli'
+
+ParticlePi::CLI.start(ARGV)

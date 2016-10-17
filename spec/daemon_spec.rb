@@ -1,10 +1,10 @@
 require_relative 'spec_helper'
-require 'daemon'
+require 'particlepi/daemon'
 require 'tempfile'
 
-describe Daemon do
+describe ParticlePi::Daemon do
   it "runs in the foreground without options" do
-    daemon = Daemon.new
+    daemon = ParticlePi::Daemon.new
     run = false
 
     daemon.run! { run = true }
@@ -15,7 +15,7 @@ describe Daemon do
   it "runs if the pidfile doesn't exist" do
     pidfile = Tempfile.new('test-daemon')
     pidfile.close
-    daemon = Daemon.new(pidfile: pidfile.path)
+    daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
     run = false
 
     daemon.run! { run = true }
@@ -27,7 +27,7 @@ describe Daemon do
     pidfile = Tempfile.new('test-daemon')
     pidfile.write Process.pid
     pidfile.close
-    daemon = Daemon.new(pidfile: pidfile.path)
+    daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
     daemon.exit_with_error = lambda { |message| raise message }
 
     err = assert_raises RuntimeError do
@@ -40,7 +40,7 @@ describe Daemon do
   it "writes the pid to a pidfile" do
     pidfile = Tempfile.new('test-daemon')
     pidfile.close
-    daemon = Daemon.new(pidfile: pidfile.path)
+    daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
 
     daemon.run!
 
@@ -51,7 +51,7 @@ describe Daemon do
   it "deletes the pid file at exit" do
     pidfile = Tempfile.new('test-daemon')
     pidfile.close
-    daemon = Daemon.new(pidfile: pidfile.path)
+    daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
 
     fork do
       daemon.run!
@@ -64,7 +64,7 @@ describe Daemon do
   it "daemonizes" do
     # Use a pipe to communicate with daemonized process
     rd, wr = IO.pipe
-    daemon = Daemon.new(daemonize: true)
+    daemon = ParticlePi::Daemon.new(daemonize: true)
 
     # fork to avoid exiting the current process
     fork do
@@ -83,7 +83,7 @@ describe Daemon do
   it "traps signals and quits the subtask" do
     pid_rd, pid_wr = IO.pipe
     rd, wr = IO.pipe
-    daemon = Daemon.new(daemonize: true, logfile: "tmp.log")
+    daemon = ParticlePi::Daemon.new(daemonize: true, logfile: "tmp.log")
 
     fork do
       daemon.run! do |d|
@@ -125,7 +125,7 @@ describe Daemon do
     logfile.close
 
     rd, wr = IO.pipe
-    daemon = Daemon.new(daemonize: true, logfile: logfile)
+    daemon = ParticlePi::Daemon.new(daemonize: true, logfile: logfile)
 
     fork do
       daemon.run! do |d|

@@ -40,10 +40,9 @@ op.separator ""
 
 op.parse!(ARGV)
 
-require 'daemon'
-require 'agent'
-Daemon.new(options).run! do |daemon|
-  Agent.new.run!(daemon)
+require 'particlepi/daemon'
+require 'particlepi/agent'
+ParticlePi::Daemon.new(options).run! do |daemon|
+  ParticlePi::Agent.new.run!(daemon)
 end
 
-#Process.daemon

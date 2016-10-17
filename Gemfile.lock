@@ -2,14 +2,22 @@ GEM
   remote: https://rubygems.org/
   specs:
     minitest (5.9.1)
+    paint (1.0.1)
     rake (11.3.0)
+    thor (0.19.1)
+    unicode-display_width (1.1.1)
+    whirly (0.2.3)
+      unicode-display_width (~> 1.1)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   minitest (>= 5)
+  paint
   rake
+  thor
+  whirly
 
 BUNDLED WITH
    1.13.3

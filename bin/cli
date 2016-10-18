@@ -2,6 +2,9 @@
 
 $LOAD_PATH.unshift File.expand_path("../../lib", File.realdirpath(__FILE__))
 
-require 'particle_pi/cli'
+require "particlepi/cli"
+require "paint"
+
+Paint.mode = 0 unless $stdout.tty?
 
 ParticlePi::CLI.start(ARGV)

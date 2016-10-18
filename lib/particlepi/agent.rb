@@ -41,7 +41,7 @@ module ParticlePi
     end
 
     def settings_path
-      File.expand_path("../../settings", __FILE__)
+      File.join(ParticlePi.project_root, "settings")
     end
 
     def firmware_env
@@ -49,7 +49,7 @@ module ParticlePi
     end
 
     def firmware_executable
-      File.expand_path("../../binaries/tinker", __FILE__)
+      File.join(ParticlePi.project_root, "binaries/tinker")
     end
 
     def firmware_args

@@ -1,3 +1,5 @@
+require 'particlepi'
+
 module ParticlePi
   class Agent
     def run!(daemon)

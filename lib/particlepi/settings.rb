@@ -1,4 +1,5 @@
 require 'json'
+require 'particlepi'
 
 module ParticlePi
   class Settings

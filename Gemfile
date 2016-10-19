@@ -1,19 +1,19 @@
 # frozen_string_literal: true
 source "https://rubygems.org"
 
-gem "rake"
+gem "rake", "~> 11.0"
 
-gem "particlerb"
+gem "particlerb", "~> 1.2"
 
 # CLI
-gem "thor"
+gem "thor", "~> 0.19"
 
 # Spinner
-gem "whirly"
-gem "paint"
+gem "whirly", "~> 0.2"
+gem "paint", "~> 1.0"
 
 # Prompt
-gem "highline"
+gem "highline", "~> 1.7"
 
 # Testing
-gem "minitest", ">= 5"
+gem "minitest", "~> 5.9"

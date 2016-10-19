@@ -7,10 +7,17 @@ module ParticlePi
   class LoginFailedError < StandardError
   end
 
+  class KeyUpdateError < StandardError
+  end
+
+  class ClaimError < StandardError
+  end
+
   class Setup
     attr_reader :username, :password
     attr_reader :token
     attr_reader :device_id
+    attr_reader :name
     attr_reader :prompt
     attr_reader :settings
     def initialize(options)
@@ -19,6 +26,7 @@ module ParticlePi
       @prompt = HighLine.new
       @token = nil
       @device_id = nil
+      @name = nil
       @settings = Settings.new
     end
 
@@ -28,16 +36,33 @@ module ParticlePi
       if reenter_credentials
         prompt_credentials
         perform_login
-        store_credentials
+        save_credentials
+      else
+        auth_client
       end
 
       prompt_device_id
       save_device_id
+      prompt_device_name
+      save_device_name
       generate_device_key
 
-      restart_agent
-    rescue LoginFailedError => e
+      Spinner.start "Claiming the device to your Particle account" do
+        publish_device_key
+        restart_agent
+        claim_device
+        rename_device
+      end
+
+      info "Done! Go to #{Paint['https://build.particle.io', :blue, :bright]} to flash code to your Raspberry Pi"
+    rescue LoginFailedError
       error "Wrong username or password"
+
+    rescue KeyUpdateError
+      error "Could not update keys for this device. Are you sure this device is not owned by another account?"
+
+    rescue ClaimError
+      error "Could not claim the device to your account. ==> The fix would be to ensure tinker is running."
 
     rescue Faraday::ClientError
       error "Network error. Check your internet connection and try again"
@@ -50,7 +75,7 @@ module ParticlePi
     def reenter_credentials
       username = settings.values["username"]
       if username
-        prompt.say "\nYou are already logged in as #{Paint[username, :yellow, :bold]}."
+        prompt.say "\nYou are already logged in as #{Paint[username, :yellow, :bright]}."
         prompt.agree "Do you want to log in as a different user? " do |q|
           q.default = 'yes'
         end
@@ -82,16 +107,34 @@ module ParticlePi
       raise LoginFailedError.new
     end
 
-    def store_credentials
+    def save_credentials
       settings.values["username"] = username
       settings.values["token"] = token
       settings.save
     end
 
+    def auth_client
+      Particle.access_token = settings.values["token"]
+    end
+
     def prompt_device_id
-      @device_id = prompt.ask "Enter the device ID you were given for this device: " do |q|
+      prompt.say "For the alpha phase, you should have received a device ID for the Raspberry Pi"
+      @device_id = prompt.ask "Device ID: " do |q|
         q.validate = /^[0-9a-z]{24}$/
+        q.default = IO.read(device_id_path).chomp if File::exist?(device_id_path)
       end
+    end
+
+    def prompt_device_name
+      prompt.say "How do you want your device to be labeled in the Particle tools?"
+      @name = prompt.ask "Name: " do |q|
+        q.default = settings.values["name"] || "pi"
+      end
+    end
+
+    def save_device_name
+      settings.values["name"] = name
+      settings.save
     end
 
     def device_id_path
@@ -99,24 +142,51 @@ module ParticlePi
     end
 
     def save_device_id
-      IO.write(device_id_path, device_id)
+      IO.write(device_id_path, device_id + "\n")
     end
 
     def key_path
       File.join(ParticlePi.project_root, "settings/device_key.der")
     end
 
+    def public_key_path
+      File.join(ParticlePi.project_root, "settings/device_key.pub.pem")
+    end
+
     def generate_device_key
       system "openssl genrsa 1024 | openssl rsa -outform DER -out #{key_path}"
+      system "openssl rsa -inform DER -in #{key_path} -pubout -outform PEM -out #{public_key_path}"
+    end
+
+    def publish_device_key
+      public_key = IO.read(public_key_path)
+      Particle.device(device_id).update_public_key(public_key)
+    rescue Particle::ForbiddenError
+      raise KeyUpdateError.new
     end
 
     def restart_agent
       system "sudo service particlepi restart"
     end
 
+    def claim_device(tries = 5)
+      Particle.device(device_id).claim
+    rescue Particle::Error => e
+      tries -= 1
+      unless tries.zero?
+        sleep 1
+        retry 
+      end
+
+      raise ClaimError
+    end
+
+    def rename_device
+      Particle.device(device_id).rename(name)
+    end
 
     def title(message)
-      prompt.say Paint[message, :blue, :bold]
+      prompt.say Paint[message, :cyan, :bright]
     end
 
     def info(message)

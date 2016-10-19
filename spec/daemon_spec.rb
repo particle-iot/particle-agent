@@ -83,7 +83,7 @@ describe ParticlePi::Daemon do
   it "traps signals and quits the subtask" do
     pid_rd, pid_wr = IO.pipe
     rd, wr = IO.pipe
-    daemon = ParticlePi::Daemon.new(daemonize: true, logfile: "tmp.log")
+    daemon = ParticlePi::Daemon.new(daemonize: true)
 
     fork do
       daemon.run! do |d|

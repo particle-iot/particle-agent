@@ -3,8 +3,10 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", File.realdirpath(__FILE__))
 
 require "particlepi/cli"
-require "paint"
 
-Paint.mode = 0 unless $stdout.tty?
-
-ParticlePi::CLI.start(ARGV)
+begin
+  ParticlePi::CLI.start(ARGV)
+rescue Interrupt, EOFError
+  # Ctrl-C or Ctrl-D ==> bye bye!
+  puts
+end

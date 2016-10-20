@@ -99,7 +99,7 @@ module ParticlePi
     end
 
     def perform_login
-      Spinner.start "Loging in" do
+      Spinner.start "Logging in" do
         particle_token = Particle.login(username, password, expires_in: 0)
         @token = particle_token.id
       end

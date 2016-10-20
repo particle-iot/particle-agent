@@ -44,6 +44,20 @@ Usage: /etc/init.d/particlepi {start|stop|restart|status}
 ```
 
 
+## Releasing software to a Debian personal package archive (PPA)
+
+Our PPA is https://launchpad.net/~particleio/+archive/ubuntu/particlepi
+
+1. Create an account on Launchpad
+2. Create a team on Launchpad
+3. Create a PPA on Launchpad
+https://help.launchpad.net/Packaging/PPA/BuildingASourcePackage
+4. Upload a source package to Launchpad
+https://help.launchpad.net/Packaging/PPA/Uploading
+5. Launchpad will build your package
+
+To get added to the Launchpad team, launch https://launchpad.net/people/+me, register an account and ask one of the existing team members to add you to the particleio team.
+
 ### Development notes
 
 Communicate with child processes

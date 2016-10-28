@@ -1,0 +1,31 @@
+Source: particlepi
+Section: ruby
+Priority: optional
+Maintainer: Julien Vanier <julien@particle.io>
+Uploaders: Julien Vanier <julien@particle.io>
+Build-Depends: debhelper (>= 9~),
+               gem2deb,
+               rake,
+               ruby-highline (>= 1.6),
+               ruby-particlerb (>= 1.2),
+               ruby-thor (>= 0.19),
+               ruby-whirly (>= 0.2)
+Standards-Version: 3.9.7
+Vcs-Git: https://github.com/spark/particlepi.git
+Vcs-Browser: https://github.com/sparks/particlepi.git
+Homepage: http://www.particle.io
+Testsuite: autopkgtest-pkg-ruby
+XS-Ruby-Versions: all
+
+Package: particlepi
+Architecture: all
+XB-Ruby-Versions: ${ruby:Versions}
+Depends: ruby | ruby-interpreter,
+         ruby-highline (>= 1.6),
+         ruby-particlerb (>= 1.2),
+         ruby-thor (>= 0.19),
+         ruby-whirly (>= 0.2),
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: This program supervises the Particle firmware executable running on Raspberry Pi
+ This program supervises the Particle firmware executable running on Raspberry Pi

@@ -22,10 +22,9 @@ Gem::Specification.new do |s|
 
   # Spinner
   s.add_dependency "whirly", "~> 0.2"
-  s.add_dependency "paint", "~> 1.0"
 
   # Prompt
-  s.add_dependency "highline", "~> 1.7"
+  s.add_dependency "highline", "~> 1.6"
 
   # Testing
   s.add_development_dependency "minitest", "~> 5.9"

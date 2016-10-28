@@ -54,7 +54,7 @@ module ParticlePi
         rename_device
       end
 
-      info "Done! Go to #{Paint['https://build.particle.io', :blue, :bright]} to flash code to your Raspberry Pi"
+      info "Done! Go to #{color('https://build.particle.io', :link)} to flash code to your Raspberry Pi"
     rescue LoginFailedError
       error "Wrong username or password"
 
@@ -75,7 +75,7 @@ module ParticlePi
     def reenter_credentials
       username = settings.values["username"]
       if username
-        prompt.say "\nYou are already logged in as #{Paint[username, :yellow, :bright]}."
+        prompt.say "\nYou are already logged in as #{color(username, :highlight)}."
         prompt.agree "Do you want to log in as a different user? " do |q|
           q.default = 'yes'
         end
@@ -186,7 +186,7 @@ module ParticlePi
     end
 
     def title(message)
-      prompt.say Paint[message, :cyan, :bright]
+      prompt.say color(message, :title)
     end
 
     def info(message)
@@ -194,7 +194,11 @@ module ParticlePi
     end
 
     def error(message)
-      prompt.say Paint[message, :red]
+      prompt.say color(message, :error)
+    end
+
+    def color(text, color_name)
+      prompt.color text, color_name
     end
   end
 end

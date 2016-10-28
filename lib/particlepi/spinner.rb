@@ -1,7 +1,8 @@
 require "whirly"
-require "paint"
+require "highline"
+require "particlepi/color_scheme"
 
-Paint.mode = 0 unless $stdout.tty?
+HighLine.color_scheme = ParticlePi::ColorScheme.new
 Whirly.configure spinner: "dots", color: false
 
 module ParticlePi

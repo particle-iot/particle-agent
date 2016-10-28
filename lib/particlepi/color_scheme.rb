@@ -1,6 +1,8 @@
 require "highline"
 
 module ParticlePi
+  # Defines highlighting for the CLI when in a terminal
+  # No highlighting when used in a script or test
   class ColorScheme < HighLine::ColorScheme
     def initialize
       if use_color?

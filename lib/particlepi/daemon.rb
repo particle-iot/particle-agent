@@ -1,11 +1,11 @@
-# Put the current process in the background, manage pid file and
-# redirect output to a log file
-#
-# Adapted from https://github.com/jakesgordon/ruby-sample-daemon
-# Copyright (c) 2014, 2015, 2016, Jake Gordon, licensed under the MIT license.
-require 'fileutils'
+require "fileutils"
 
 module ParticlePi
+  # Put the current process in the background, manage pid file and
+  # redirect output to a log file
+  #
+  # Adapted from https://github.com/jakesgordon/ruby-sample-daemon
+  # Copyright (c) 2014, 2015, 2016, Jake Gordon, licensed under the MIT license.
   class Daemon
     attr_reader :options
     attr_accessor :exit_with_error
@@ -99,7 +99,7 @@ module ParticlePi
       return :exited unless File.exist?(pidfile)
 
       pid = ::File.read(pidfile).to_i
-      return :dead if pid == 0
+      return :dead if pid.zero?
       # check process status
       Process.kill(0, pid)
       :running
@@ -117,17 +117,17 @@ module ParticlePi
     end
 
     def redirect_output
-      FileUtils.mkdir_p(File.dirname(logfile), :mode => 0755)
+      FileUtils.mkdir_p(File.dirname(logfile), mode: 0o755)
       FileUtils.touch logfile
-      File.chmod(0644, logfile)
-      $stderr.reopen(logfile, 'a')
+      File.chmod(0o644, logfile)
+      $stderr.reopen(logfile, "a")
       $stdout.reopen($stderr)
       $stdout.sync = $stderr.sync = true
     end
 
     def suppress_output
-        $stderr.reopen('/dev/null', 'a')
-        $stdout.reopen($stderr)
+      $stderr.reopen("/dev/null", "a")
+      $stdout.reopen($stderr)
     end
 
     def trap_signals

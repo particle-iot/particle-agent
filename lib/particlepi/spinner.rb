@@ -6,8 +6,9 @@ HighLine.color_scheme = ParticlePi::ColorScheme.new
 Whirly.configure spinner: "dots", color: false
 
 module ParticlePi
+  # Show a spinning icon on the terminal during a long operation
   class Spinner
-    def self.start(message = nil, &block)
+    def self.show(message = nil, &block)
       Whirly.start status: message, &block
     end
 

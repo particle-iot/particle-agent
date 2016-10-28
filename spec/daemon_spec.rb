@@ -1,6 +1,6 @@
-require_relative 'spec_helper'
-require 'particlepi/daemon'
-require 'tempfile'
+require_relative "spec_helper"
+require "particlepi/daemon"
+require "tempfile"
 
 describe ParticlePi::Daemon do
   it "runs in the foreground without options" do
@@ -13,7 +13,7 @@ describe ParticlePi::Daemon do
   end
 
   it "runs if the pidfile doesn't exist" do
-    pidfile = Tempfile.new('test-daemon')
+    pidfile = Tempfile.new("test-daemon")
     pidfile.close
     daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
     run = false
@@ -24,21 +24,21 @@ describe ParticlePi::Daemon do
   end
 
   it "doesn't run if the pidfile exists" do
-    pidfile = Tempfile.new('test-daemon')
+    pidfile = Tempfile.new("test-daemon")
     pidfile.write Process.pid
     pidfile.close
     daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
-    daemon.exit_with_error = lambda { |message| raise message }
+    daemon.exit_with_error = ->(message) { raise message }
 
     err = assert_raises RuntimeError do
       daemon.run!
     end
 
-    assert_match (/The agent is already running/), err.message
+    assert_match(/The agent is already running/, err.message)
   end
 
   it "writes the pid to a pidfile" do
-    pidfile = Tempfile.new('test-daemon')
+    pidfile = Tempfile.new("test-daemon")
     pidfile.close
     daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
 
@@ -49,7 +49,7 @@ describe ParticlePi::Daemon do
   end
 
   it "deletes the pid file at exit" do
-    pidfile = Tempfile.new('test-daemon')
+    pidfile = Tempfile.new("test-daemon")
     pidfile.close
     daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
 
@@ -58,7 +58,7 @@ describe ParticlePi::Daemon do
     end
     Process.wait
 
-    assert_equal false, File::exist?(pidfile.path)
+    assert_equal false, File.exist?(pidfile.path)
   end
 
   it "daemonizes" do
@@ -91,22 +91,18 @@ describe ParticlePi::Daemon do
         pid_wr.write Process.pid
         pid_wr.close
 
-        # Subtask that doen't quit until it receives a signal
+        # Subtask that doen"t quit until it receives a signal
         fork do
           subtask_quit = false
-          
+
           trap(:QUIT) { subtask_quit = true }
-          until subtask_quit
-            sleep 0.01
-          end
+          sleep 0.01 until subtask_quit
 
           rd.close
           wr.write "Quit"
         end
 
-        until d.quit?
-          sleep 0.01
-        end
+        sleep 0.01 until d.quit?
         Process.wait
       end
     end
@@ -121,14 +117,14 @@ describe ParticlePi::Daemon do
   end
 
   it "logs to a file" do
-    logfile = Tempfile.new('log-daemon')
+    logfile = Tempfile.new("log-daemon")
     logfile.close
 
     rd, wr = IO.pipe
     daemon = ParticlePi::Daemon.new(daemonize: true, logfile: logfile)
 
     fork do
-      daemon.run! do |d|
+      daemon.run! do
         puts "This is a log"
         rd.close
         wr.write "Done"

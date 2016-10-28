@@ -1,7 +1,8 @@
-require 'json'
-require 'particlepi'
+require "json"
+require "particlepi"
 
 module ParticlePi
+  # Load and save settings for the app
   class Settings
     attr_reader :path
     attr_reader :values
@@ -15,6 +16,7 @@ module ParticlePi
       @values = JSON.parse(settings_str) unless settings_str.empty?
     rescue Errno::ENOENT
       # Ignore missing file
+      @values = {}
     end
 
     def save

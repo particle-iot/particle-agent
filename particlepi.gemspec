@@ -1,11 +1,11 @@
 $LOAD_PATH.unshift File.dirname(__FILE__) + "/lib"
-require 'particlepi/version'
+require "particlepi/version"
 
 Gem::Specification.new do |s|
   s.name = "particlepi"
   s.version = ParticlePi::VERSION.dup
   s.platform = Gem::Platform::RUBY
-  s.extra_rdoc_files = %w{ README.md LICENSE }
+  s.extra_rdoc_files = %w(README.md LICENSE)
   s.summary = "This program supervises the Particle firmware executable running on Raspberry Pi"
   s.description = s.summary
   s.license = "Apache-2.0"
@@ -30,9 +30,12 @@ Gem::Specification.new do |s|
   s.add_development_dependency "minitest", "~> 5.9"
 
   s.bindir       = "bin"
-  s.executables  = %w{ particlepi particlepi-agent }
+  s.executables  = %w(particlepi particlepi-agent)
 
-  s.require_paths = %w{ lib lib-backcompat }
-  s.files = %w{ Gemfile Rakefile LICENSE README.md } + Dir.glob("*.gemspec")
-  s.files += Dir.glob("{binaries,lib,init,settings,spec}/**/*", File::FNM_DOTMATCH).reject { |f| File.directory?(f) }
+  s.require_paths = %w(lib lib-backcompat)
+  s.files = %w(Gemfile Rakefile LICENSE README.md) + Dir.glob("*.gemspec")
+  s.files += Dir.glob(
+    "{binaries,lib,init,settings,spec}/**/*",
+    File::FNM_DOTMATCH
+  ).reject { |f| File.directory?(f) }
 end

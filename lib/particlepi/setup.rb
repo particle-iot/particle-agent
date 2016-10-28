@@ -13,6 +13,7 @@ module ParticlePi
   class ClaimError < StandardError
   end
 
+  # CLI command to set up the Rapsberry Pi as a Particle device
   class Setup
     attr_reader :username, :password
     attr_reader :token
@@ -47,7 +48,7 @@ module ParticlePi
       save_device_name
       generate_device_key
 
-      Spinner.start "Claiming the device to your Particle account" do
+      Spinner.show "Claiming the device to your Particle account" do
         publish_device_key
         restart_agent
         claim_device
@@ -55,14 +56,14 @@ module ParticlePi
       end
 
       info "Done! Go to #{color('https://build.particle.io', :link)} to flash code to your Raspberry Pi"
-    rescue LoginFailedError
-      error "Wrong username or password"
+    rescue LoginFailedError => e
+      error e.message
 
-    rescue KeyUpdateError
-      error "Could not update keys for this device. Are you sure this device is not owned by another account?"
+    rescue KeyUpdateError => e
+      error "#{e.message}. Are you sure this device is not owned by another account?"
 
-    rescue ClaimError
-      error "Could not claim the device to your account. ==> The fix would be to ensure tinker is running."
+    rescue ClaimError => e
+      error "#{e.message}. ==> The fix would be to ensure tinker is running."
 
     rescue Faraday::ClientError
       error "Network error. Check your internet connection and try again"
@@ -77,7 +78,7 @@ module ParticlePi
       if username
         prompt.say "You are already logged in as #{color(username, :highlight)}."
         prompt.agree "Do you want to log in as a different user? " do |q|
-          q.default = 'yes'
+          q.default = "yes"
         end
       else
         info "Log in with your Particle account"
@@ -90,7 +91,7 @@ module ParticlePi
       @username = prompt.ask("Email address: ") do |q|
         q.default = username
         q.responses[:ask_on_error] = :question
-        q.validate =/@/
+        q.validate = /@/
       end
       @password = prompt.ask("Password: ") do |q|
         q.default = password
@@ -99,12 +100,12 @@ module ParticlePi
     end
 
     def perform_login
-      Spinner.start "Logging in" do
+      Spinner.show "Logging in" do
         particle_token = Particle.login(username, password, expires_in: 0)
         @token = particle_token.id
       end
-    rescue Particle::BadRequest => e
-      raise LoginFailedError.new
+    rescue Particle::BadRequest
+      raise LoginFailedError, "Wrong username or password"
     end
 
     def save_credentials
@@ -121,7 +122,7 @@ module ParticlePi
       prompt.say "For the alpha phase, you should have received a device ID for the Raspberry Pi"
       @device_id = prompt.ask "Device ID: " do |q|
         q.validate = /^[0-9a-z]{24}$/
-        q.default = IO.read(device_id_path).chomp if File::exist?(device_id_path)
+        q.default = IO.read(device_id_path).chomp if File.exist?(device_id_path)
       end
     end
 
@@ -162,7 +163,7 @@ module ParticlePi
       public_key = IO.read(public_key_path)
       Particle.device(device_id).update_public_key(public_key)
     rescue Particle::Forbidden
-      raise KeyUpdateError.new
+      raise KeyUpdateError, "Could not update keys for this device"
     end
 
     def restart_agent
@@ -171,14 +172,14 @@ module ParticlePi
 
     def claim_device(tries = 5)
       Particle.device(device_id).claim
-    rescue Particle::Error => e
+    rescue Particle::Error
       tries -= 1
       unless tries.zero?
         sleep 1
-        retry 
+        retry
       end
 
-      raise ClaimError
+      raise ClaimError, "Could not claim the device to your account"
     end
 
     def rename_device

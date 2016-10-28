@@ -1,8 +1,8 @@
 #!/usr/bin/ruby
 
-$LOAD_PATH.unshift File.expand_path("../../lib", File.realdirpath(__FILE__))
+require "bundler/setup"
 
-require 'optparse'
+require "optparse"
 
 options = {}
 
@@ -23,14 +23,14 @@ op.separator "Usage: daemon [options]"
 op.separator ""
 
 op.separator "Process options:"
-op.on("-d", "--daemon",   daemonize_help)      { options[:daemonize] = true  }
+op.on("-d", "--daemon", daemonize_help)        { options[:daemonize] = true  }
 op.on("-p", "--pidfile PIDFILE", pidfile_help) { |value| options[:pidfile]   = value }
 op.on("-l", "--logfile LOGFILE", logfile_help) { |value| options[:logfile]   = value }
 op.separator ""
 
 op.separator "Ruby options:"
-op.on(      "--debug",        debug_help)   { $DEBUG = true }
-op.on(      "--warn",         warn_help)    { $-w = true    }
+op.on("--debug",        debug_help)   { $DEBUG = true }
+op.on("--warn",         warn_help)    { $-w = true    }
 op.separator ""
 
 op.separator "Common options:"
@@ -40,9 +40,8 @@ op.separator ""
 
 op.parse!(ARGV)
 
-require 'particlepi/daemon'
-require 'particlepi/agent'
+require "particlepi/daemon"
+require "particlepi/agent"
 ParticlePi::Daemon.new(options).run! do |daemon|
   ParticlePi::Agent.new.run!(daemon)
 end
-

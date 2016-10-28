@@ -1,12 +1,18 @@
 #!/usr/bin/env rake
 
-require 'bundler'
+require "bundler"
 Bundler::GemHelper.install_tasks
 
-require "rake/testtask"
+default_tasks = []
 
-Rake::TestTask.new do |t|
+require "rake/testtask"
+default_tasks << Rake::TestTask.new do |t|
   t.pattern = "spec/*_spec.rb"
 end
 
-task default: :test
+unless ENV["CI"]
+  require "rubocop/rake_task"
+  default_tasks << RuboCop::RakeTask.new(:rubocop)
+end
+
+task default: default_tasks.map(&:name)

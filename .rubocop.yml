@@ -1,0 +1,22 @@
+# Config file for Rubocop Ruby linter
+
+# Prefer double quotes over single quotes
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+# Allow longer lines
+Metrics/LineLength:
+  Max: 120
+
+# Have a comma on the last line of an array or hash
+Style/TrailingCommaInLiteral:
+  EnforcedStyleForMultiline: comma
+
+# Extend the limit for lines in a class
+Metrics/ClassLength:
+  Max: 200
+
+
+# Allow ; to separate several expressions on the same line.
+Style/Semicolon:
+  AllowAsExpressionSeparator: true

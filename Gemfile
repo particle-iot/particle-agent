@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 source "https://rubygems.org"
 
-# For travis
-gem "rake", "~> 11.0"
-
+# All gem dependencies are specified in particlepi.gemspec
 gemspec

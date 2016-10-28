@@ -1,3 +1,4 @@
+require "particlepi/version"
 
 module ParticlePi
   def self.project_root

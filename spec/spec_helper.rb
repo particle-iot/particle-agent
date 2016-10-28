@@ -1,4 +1,5 @@
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'particlepi'
+
 require "minitest/autorun"
 require "minitest/pride"
-
-$: << File.dirname(__FILE__) + "/../lib"

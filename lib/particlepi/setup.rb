@@ -32,7 +32,7 @@ module ParticlePi
 
     def run!
       load_settings
-      title "Let's connect your Raspberry Pi to the Particle Cloud!"
+      title "Let's connect your Raspberry Pi to the Particle Cloud!\n"
       if reenter_credentials
         prompt_credentials
         perform_login
@@ -75,13 +75,13 @@ module ParticlePi
     def reenter_credentials
       username = settings.values["username"]
       if username
-        prompt.say "\nYou are already logged in as #{color(username, :highlight)}."
+        prompt.say "You are already logged in as #{color(username, :highlight)}."
         prompt.agree "Do you want to log in as a different user? " do |q|
           q.default = 'yes'
         end
       else
         info "Log in with your Particle account"
-        info "Don't have an account yet? Create one at https://login.particle.io"
+        info "Don't have an account yet? Create one at #{color('https://login.particle.io', :link)}"
         true
       end
     end
@@ -161,7 +161,7 @@ module ParticlePi
     def publish_device_key
       public_key = IO.read(public_key_path)
       Particle.device(device_id).update_public_key(public_key)
-    rescue Particle::ForbiddenError
+    rescue Particle::Forbidden
       raise KeyUpdateError.new
     end
 

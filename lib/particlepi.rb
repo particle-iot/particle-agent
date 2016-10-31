@@ -1,4 +1,5 @@
 require "particlepi/version"
+require "particlepi/config"
 
 # ParticlePi
 # An agent that runs the Particle firmware on the Raspberry Pi

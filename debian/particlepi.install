@@ -1,0 +1,2 @@
+# Copy data files
+share/* /usr/share/particle/

@@ -25,7 +25,7 @@ module ParticlePi
     end
 
     def default_path
-      File.join(ParticlePi.project_root, "settings/particle.json")
+      Config.settings_path
     end
   end
 end

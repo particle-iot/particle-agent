@@ -25,7 +25,7 @@ module ParticlePi
     def run!
       check_pid
       daemonize if daemonize?
-      write_pid
+      write_pid if pidfile
       trap_signals
 
       if logfile
@@ -68,7 +68,7 @@ module ParticlePi
     end
 
     def write_pid
-      return unless pidfile
+      ensure_directory_exists(pidfile)
       begin
         File.open(pidfile, ::File::CREAT | ::File::EXCL | ::File::WRONLY) do |f|
           f.write Process.pid
@@ -78,6 +78,11 @@ module ParticlePi
         check_pid
         retry
       end
+    end
+
+    def ensure_directory_exists(filename)
+      dirname = File.dirname(filename)
+      FileUtils.mkdir_p(dirname, mode: 0o755) unless File.directory?(dirname)
     end
 
     def delete_pid

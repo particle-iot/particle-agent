@@ -31,6 +31,8 @@ module ParticlePi
       @settings = Settings.new
     end
 
+    # TODO: refactor once I know what this command should be doing
+    # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
     def run!
       load_settings
       title "Let's connect your Raspberry Pi to the Particle Cloud!\n"
@@ -86,6 +88,7 @@ module ParticlePi
         true
       end
     end
+    # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
     def prompt_credentials
       @username = prompt.ask("Email address: ") do |q|

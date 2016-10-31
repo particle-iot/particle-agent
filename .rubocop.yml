@@ -1,4 +1,9 @@
 # Config file for Rubocop Ruby linter
+# See https://github.com/bbatsov/rubocop/blob/master/config/default.yml
+
+AllCops:
+  # Display cop names in offense messages
+  DisplayCopNames: true
 
 # Prefer double quotes over single quotes
 Style/StringLiterals:

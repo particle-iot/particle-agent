@@ -1,6 +1,6 @@
 require "fileutils"
 
-module ParticlePi
+module ParticleAgent
   # Put the current process in the background, manage pid file and
   # redirect output to a log file
   #

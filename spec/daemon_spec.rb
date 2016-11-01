@@ -1,10 +1,10 @@
 require_relative "spec_helper"
-require "particlepi/daemon"
+require "particle_agent/daemon"
 require "tempfile"
 
-describe ParticlePi::Daemon do
+describe ParticleAgent::Daemon do
   it "runs in the foreground without options" do
-    daemon = ParticlePi::Daemon.new
+    daemon = ParticleAgent::Daemon.new
     run = false
 
     daemon.run! { run = true }
@@ -15,7 +15,7 @@ describe ParticlePi::Daemon do
   it "runs if the pidfile doesn't exist" do
     pidfile = Tempfile.new("test-daemon")
     pidfile.close
-    daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
+    daemon = ParticleAgent::Daemon.new(pidfile: pidfile.path)
     run = false
 
     daemon.run! { run = true }
@@ -27,7 +27,7 @@ describe ParticlePi::Daemon do
     pidfile = Tempfile.new("test-daemon")
     pidfile.write Process.pid
     pidfile.close
-    daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
+    daemon = ParticleAgent::Daemon.new(pidfile: pidfile.path)
     daemon.exit_with_error = ->(message) { raise message }
 
     err = assert_raises RuntimeError do
@@ -40,7 +40,7 @@ describe ParticlePi::Daemon do
   it "writes the pid to a pidfile" do
     pidfile = Tempfile.new("test-daemon")
     pidfile.close
-    daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
+    daemon = ParticleAgent::Daemon.new(pidfile: pidfile.path)
 
     daemon.run!
 
@@ -51,7 +51,7 @@ describe ParticlePi::Daemon do
   it "deletes the pid file at exit" do
     pidfile = Tempfile.new("test-daemon")
     pidfile.close
-    daemon = ParticlePi::Daemon.new(pidfile: pidfile.path)
+    daemon = ParticleAgent::Daemon.new(pidfile: pidfile.path)
 
     fork do
       daemon.run!
@@ -64,7 +64,7 @@ describe ParticlePi::Daemon do
   it "daemonizes" do
     # Use a pipe to communicate with daemonized process
     rd, wr = IO.pipe
-    daemon = ParticlePi::Daemon.new(daemonize: true)
+    daemon = ParticleAgent::Daemon.new(daemonize: true)
 
     # fork to avoid exiting the current process
     fork do
@@ -83,7 +83,7 @@ describe ParticlePi::Daemon do
   it "traps signals and quits the subtask" do
     pid_rd, pid_wr = IO.pipe
     rd, wr = IO.pipe
-    daemon = ParticlePi::Daemon.new(daemonize: true)
+    daemon = ParticleAgent::Daemon.new(daemonize: true)
 
     fork do
       daemon.run! do |d|
@@ -121,7 +121,7 @@ describe ParticlePi::Daemon do
     logfile.close
 
     rd, wr = IO.pipe
-    daemon = ParticlePi::Daemon.new(daemonize: true, logfile: logfile)
+    daemon = ParticleAgent::Daemon.new(daemonize: true, logfile: logfile)
 
     fork do
       daemon.run! do

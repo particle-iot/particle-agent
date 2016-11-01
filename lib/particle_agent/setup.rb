@@ -1,11 +1,11 @@
 require "highline"
 require "fileutils"
 require "particlerb"
-require "particlepi/spinner"
-require "particlepi/config"
-require "particlepi/settings"
+require "particle_agent/spinner"
+require "particle_agent/config"
+require "particle_agent/settings"
 
-module ParticlePi
+module ParticleAgent
   class LoginFailedError < StandardError
   end
 
@@ -157,15 +157,11 @@ module ParticlePi
     end
 
     def ensure_server_key_exists
-      unless File.exist?(server_key_path)
-        FileUtils.cp default_server_key_path, server_key_path
-      end
+      FileUtils.cp default_server_key_path, server_key_path unless File.exist?(server_key_path)
     end
 
     def ensure_firmware_exists
-      unless File.exist?(firmware_executable_path)
-        FileUtils.cp default_executable_path, firmware_executable_path
-      end
+      FileUtils.cp default_executable_path, firmware_executable_path unless File.exist?(firmware_executable_path)
     end
 
     def device_id_path
@@ -213,7 +209,7 @@ module ParticlePi
     end
 
     def restart_agent
-      system "sudo service particlepi restart"
+      system "sudo service particle-agent restart"
     end
 
     def claim_device(tries = 5)

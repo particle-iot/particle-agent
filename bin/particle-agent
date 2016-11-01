@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
 require "bundler/setup"
-require "particlepi/cli"
+require "particle_agent/cli"
 
 begin
-  ParticlePi::CLI.start(ARGV)
+  ParticleAgent::CLI.start(ARGV)
 rescue Interrupt, EOFError
   # Ctrl-C or Ctrl-D ==> bye bye!
   puts

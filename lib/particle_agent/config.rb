@@ -1,4 +1,4 @@
-module ParticlePi
+module ParticleAgent
   # Common paths for the entire app
   module Config
     # Where the settings JSON is stored

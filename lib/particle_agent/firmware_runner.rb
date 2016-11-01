@@ -1,6 +1,6 @@
-require "particlepi/config"
+require "particle_agent/config"
 
-module ParticlePi
+module ParticleAgent
   # Responsible for running one firmware executable
   class FirmwareRunner
     attr_reader :path

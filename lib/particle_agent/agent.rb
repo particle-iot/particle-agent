@@ -1,8 +1,8 @@
-require "particlepi/config"
-require "particlepi/firmware_runner"
-require "particlepi/settings"
+require "particle_agent/config"
+require "particle_agent/firmware_runner"
+require "particle_agent/settings"
 
-module ParticlePi
+module ParticleAgent
   # The logic for the agent that monitor the firmware
   # Usually runs in the background as a daemon
   class Agent
@@ -17,14 +17,7 @@ module ParticlePi
 
       puts "Starting agent"
 
-      puts "No firmware to run." if firmware_paths.empty?
-
-      firmware_paths.map do |firmware_path|
-        Thread.new do
-          runner = FirmwareRunner.new(firmware_path)
-          runner.run!(daemon)
-        end
-      end.each { |t| t.join }
+      start_firmware_runners
 
       sleep 1 until daemon.quit?
 
@@ -33,6 +26,17 @@ module ParticlePi
 
     def load_settings
       settings.load
+    end
+
+    def start_firmware_runners
+      puts "No firmware to run." if firmware_paths.empty?
+
+      firmware_paths.map do |firmware_path|
+        Thread.new do
+          runner = FirmwareRunner.new(firmware_path)
+          runner.run!(daemon)
+        end
+      end.each(&:join)
     end
 
     def active_devices

@@ -1,7 +1,7 @@
 require "json"
-require "particlepi/config"
+require "particle_agent/config"
 
-module ParticlePi
+module ParticleAgent
   # Load and save settings for the app
   class Settings
     attr_reader :path

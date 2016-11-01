@@ -7,5 +7,5 @@ gem "rubocop" unless ENV["CI"]
 # For Travis
 gem "rake", "~> 11.0"
 
-# All gem dependencies are specified in particlepi.gemspec
+# All gem dependencies are specified in particle-agent.gemspec
 gemspec

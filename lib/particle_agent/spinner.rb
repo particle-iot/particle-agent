@@ -1,11 +1,11 @@
 require "whirly"
 require "highline"
-require "particlepi/color_scheme"
+require "particle_agent/color_scheme"
 
-HighLine.color_scheme = ParticlePi::ColorScheme.new
+HighLine.color_scheme = ParticleAgent::ColorScheme.new
 Whirly.configure spinner: "dots", color: false
 
-module ParticlePi
+module ParticleAgent
   # Show a spinning icon on the terminal during a long operation
   class Spinner
     def self.show(message = nil, &block)

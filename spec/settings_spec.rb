@@ -1,14 +1,14 @@
 require_relative "spec_helper"
-require "particlepi/settings"
+require "particle_agent/settings"
 require "tempfile"
 
-describe ParticlePi::Settings do
+describe ParticleAgent::Settings do
   describe "when the settings file is missing" do
     it "loads blank settings" do
       settings_file = Tempfile.new("settings")
       settings_file.close
 
-      settings = ParticlePi::Settings.new(settings_file.path)
+      settings = ParticleAgent::Settings.new(settings_file.path)
 
       settings.load
 
@@ -19,7 +19,7 @@ describe ParticlePi::Settings do
       settings_file = Tempfile.new("settings")
       settings_file.close
 
-      settings = ParticlePi::Settings.new(settings_file.path)
+      settings = ParticleAgent::Settings.new(settings_file.path)
       settings.values["test"] = "value"
       settings.save
 
@@ -35,7 +35,7 @@ describe ParticlePi::Settings do
       settings_file.write %({"test":"value"})
       settings_file.close
 
-      settings = ParticlePi::Settings.new(settings_file.path)
+      settings = ParticleAgent::Settings.new(settings_file.path)
 
       settings.load
 
@@ -48,7 +48,7 @@ describe ParticlePi::Settings do
       settings_file.write %({"test":"old"})
       settings_file.close
 
-      settings = ParticlePi::Settings.new(settings_file.path)
+      settings = ParticleAgent::Settings.new(settings_file.path)
       settings.values["test"] = "value"
       settings.save
 

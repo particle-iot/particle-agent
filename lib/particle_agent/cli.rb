@@ -1,7 +1,7 @@
 require "thor"
-require "particlepi/setup"
+require "particle_agent/setup"
 
-module ParticlePi
+module ParticleAgent
   # Entry point for the Particle Pi command line interface
   class CLI < Thor
     desc "setup", "Connect your Raspberry Pi to the Particle Cloud"

@@ -1,8 +1,8 @@
 #!/bin/sh
-# Start/stop the Particle Pi agent
+# Start/stop the Particle agent
 #
 ### BEGIN INIT INFO
-# Provides:          particlepi
+# Provides:          particle-agent
 # Required-Start:    $remote_fs $syslog
 # Required-Stop:     $remote_fs $syslog
 # Default-Start:     2 3 4 5
@@ -12,11 +12,11 @@
 #set -x
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 DESC="Particle Agent"
-NAME=particlepi
+NAME=particle-agent
 
-DAEMON=/usr/bin/particlepi-agent
-PIDFILE=/var/run/particle/particlepi.pid
-LOGFILE=/var/log/particlepi.log
+DAEMON=/usr/bin/particle-agent-service
+PIDFILE=/var/run/particle/particle-agent.pid
+LOGFILE=/var/log/particle-agent.log
 
 # Load helper functions
 . /lib/init/vars.sh

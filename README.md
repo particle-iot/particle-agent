@@ -25,6 +25,19 @@ The service description for the Agent service is a System V init script in
 
 Install the particle-agent Debian package ==> see the GitHub release page.
 
+Copy the packages to a Raspberry Pi
+
+particle-agent_0.1.0-1_all.deb
+ruby-unicode-display-width_1.1.1-1_all.deb
+ruby-particlerb_1.2.0-1_all.deb
+ruby-whirly_0.2.3-1_all.deb
+
+`sudo dpkg --install *.deb`
+
+`sudo apt install -f`
+
+
+
 TODO: Update this section when the install workflow is determined.
 
 ## Manually Installing the service
@@ -93,7 +106,7 @@ gem2deb -p particle-agent particle-agent
 Or build the gem locally
 ```
 gem build *.gemspec
-gem2deb -p particlepi *.gem
+gem2deb -p particle-agent *.gem
 ```
 
 ### Development notes

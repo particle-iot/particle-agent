@@ -4,6 +4,9 @@
 AllCops:
   # Display cop names in offense messages
   DisplayCopNames: true
+  Exclude:
+    - 'pkg/**/*'
+    
 
 # Prefer double quotes over single quotes
 Style/StringLiterals:

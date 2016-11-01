@@ -5,6 +5,7 @@ Maintainer: Julien Vanier <julien@particle.io>
 Uploaders: Julien Vanier <julien@particle.io>
 Build-Depends: debhelper (>= 9~),
                gem2deb,
+               bundler,
                rake,
                ruby-highline (>= 1.6),
                ruby-particlerb (>= 1.2),
@@ -21,6 +22,7 @@ Package: particle-agent
 Architecture: all
 XB-Ruby-Versions: ${ruby:Versions}
 Depends: ruby | ruby-interpreter,
+         bundler,
          ruby-highline (>= 1.6),
          ruby-particlerb (>= 1.2),
          ruby-thor (>= 0.19),

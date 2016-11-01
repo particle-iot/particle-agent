@@ -9,7 +9,7 @@ module ParticlePi
       @path = path
     end
 
-    def run(daemon)
+    def run!(daemon)
       until daemon.quit?
         if firmware_exist?
           create_pipes

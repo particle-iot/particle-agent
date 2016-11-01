@@ -1,4 +1,5 @@
 require "highline"
+require "fileutils"
 require "particlerb"
 require "particlepi/spinner"
 require "particlepi/config"
@@ -46,10 +47,13 @@ module ParticlePi
       end
 
       prompt_device_id
+      ensure_device_path_exists
       save_device_id
       prompt_device_name
       save_device_name
       generate_device_key
+      ensure_server_key_exists
+      ensure_firmware_exists
 
       Spinner.show "Claiming the device to your Particle account" do
         publish_device_key
@@ -148,8 +152,20 @@ module ParticlePi
       settings.save
     end
 
-    def device_path
-      @device_path ||= File.join Config.devices_path, device_id
+    def ensure_device_path_exists
+      FileUtils.mkdir_p(device_path, mode: 0o700) unless File.directory?(device_path)
+    end
+
+    def ensure_server_key_exists
+      unless File.exist?(server_key_path)
+        FileUtils.cp default_server_key_path, server_key_path
+      end
+    end
+
+    def ensure_firmware_exists
+      unless File.exist?(firmware_executable_path)
+        FileUtils.cp default_executable_path, firmware_executable_path
+      end
     end
 
     def device_id_path
@@ -162,6 +178,26 @@ module ParticlePi
 
     def public_key_path
       File.join device_path, "device_key.pub.pem"
+    end
+
+    def firmware_executable_path
+      File.join device_path, Config.firmware_executable
+    end
+
+    def server_key_path
+      File.join device_path, "server_key.der"
+    end
+
+    def default_server_key_path
+      Config.server_key_path
+    end
+
+    def device_path
+      @device_path ||= File.join Config.devices_path, device_id
+    end
+
+    def default_executable_path
+      Config.tinker_path
     end
 
     def generate_device_key

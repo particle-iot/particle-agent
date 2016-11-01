@@ -15,10 +15,16 @@ module ParticlePi
     def run!(daemon)
       load_settings
 
-      firmware_paths.each do |firmware_path|
-        runner = FirmwareRunner.new(firmware_path)
-        runner.run!
-      end
+      puts "Starting agent"
+
+      puts "No firmware to run." if firmware_paths.empty?
+
+      firmware_paths.map do |firmware_path|
+        Thread.new do
+          runner = FirmwareRunner.new(firmware_path)
+          runner.run!(daemon)
+        end
+      end.each { |t| t.join }
 
       sleep 1 until daemon.quit?
 

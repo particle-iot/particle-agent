@@ -21,7 +21,7 @@ module ParticlePi
         title:     [:cyan, :bold],
         link:      [:blue, :bold],
         highlight: [:yellow, :bold],
-        error:     [:red, :bright],
+        error:     [:red, :bold],
       }
     end
 

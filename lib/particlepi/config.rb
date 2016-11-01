@@ -31,6 +31,11 @@ module ParticlePi
       File.join share_path, "binaries/tinker"
     end
 
+    # The path to the server public key
+    def self.server_key_path
+      File.join share_path, "keys/server_key.der"
+    end
+
     # The path where runtime configuration like user apps and keys are kept
     # Can be overwritten for tests
     @run_path = "/var/run/particle"

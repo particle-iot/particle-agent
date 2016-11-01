@@ -15,7 +15,7 @@ DESC="Particle Agent"
 NAME=particlepi
 
 DAEMON=/usr/bin/particlepi-agent
-PIDFILE=/var/run/particle/pid
+PIDFILE=/var/run/particle/particlepi.pid
 LOGFILE=/var/log/particlepi.log
 
 # Load helper functions

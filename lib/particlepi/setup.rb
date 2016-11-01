@@ -125,7 +125,7 @@ module ParticlePi
       prompt.say "For the alpha phase, you should have received a device ID for the Raspberry Pi"
       @device_id = prompt.ask "Device ID: " do |q|
         q.validate = /^[0-9a-z]{24}$/
-        q.default = IO.read(device_id_path).chomp if File.exist?(device_id_path)
+        q.default = (settings.values["devices"] || []).first
       end
     end
 
@@ -141,20 +141,26 @@ module ParticlePi
       settings.save
     end
 
-    def device_id_path
-      File.join(ParticlePi.project_root, "settings/device_id.txt")
-    end
-
     def save_device_id
       IO.write(device_id_path, device_id + "\n")
+      settings.values["devices"] = [device_id]
+      settings.save
+    end
+
+    def device_path
+      @device_path ||= File.join Config.devices_path, device_id
+    end
+
+    def device_id_path
+      File.join device_path, "device_id.txt"
     end
 
     def key_path
-      File.join(ParticlePi.project_root, "settings/device_key.der")
+      File.join device_path, "device_key.der"
     end
 
     def public_key_path
-      File.join(ParticlePi.project_root, "settings/device_key.pub.pem")
+      File.join device_path, "device_key.pub.pem"
     end
 
     def generate_device_key

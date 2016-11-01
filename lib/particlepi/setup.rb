@@ -1,6 +1,7 @@
 require "highline"
 require "particlerb"
 require "particlepi/spinner"
+require "particlepi/config"
 require "particlepi/settings"
 
 module ParticlePi

@@ -1,4 +1,6 @@
 require "particlepi/config"
+require "particlepi/firmware_runner"
+require "particlepi/settings"
 
 module ParticlePi
   # The logic for the agent that monitor the firmware

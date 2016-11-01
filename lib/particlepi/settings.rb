@@ -1,5 +1,5 @@
 require "json"
-require "particlepi"
+require "particlepi/config"
 
 module ParticlePi
   # Load and save settings for the app

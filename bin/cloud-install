@@ -6,9 +6,9 @@ UNICODE_DISPLAY_WIDTH_VER=1.1.1-1
 WHIRLY_VER=0.2.3-1
 PARTICLERB_VER=1.2.0-1
 
-echo "Installing the Particle Agent\n"
+echo -e "Installing the Particle Agent\n"
 
-echo "Downloading packages\n"
+echo -e "Downloading packages\n"
 
 curl -# -L --create-dirs \
   https://github.com/spark/particle-agent/releases/download/v${AGENT_VER}/particle-agent_${AGENT_VER}_all.deb -o $PACKAGES_DIR/particle-agent_${AGENT_VER}_all.deb \
@@ -16,14 +16,14 @@ curl -# -L --create-dirs \
   https://github.com/spark/ruby-whirly/releases/download/debian%2F${WHIRLY_VER}/ruby-whirly_${WHIRLY_VER}_all.deb -o $PACKAGES_DIR/ruby-whirly_${WHIRLY_VER}_all.deb \
   https://github.com/spark/ruby-particlerb/releases/download/debian%2F${PARTICLERB_VER}/ruby-particlerb_${PARTICLERB_VER}_all.deb -o $PACKAGES_DIR/ruby-particlerb_${PARTICLERB_VER}_all.deb
 
-echo "\nInstalling packages\n"
+echo -e "\nInstalling packages\n"
 sudo dpkg --install $PACKAGES_DIR/*.deb
 sudo apt-get install -f -y
 
 # Flush stdin
 read -N 10000000 -t 0.01
 
-echo "\nRunning sudo particle-agent setup\n"
+echo -e "\nRunning sudo particle-agent setup\n"
 
 sudo particle-agent setup
 

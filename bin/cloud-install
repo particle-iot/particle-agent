@@ -1,0 +1,19 @@
+#!/bin/bash
+
+PACKAGES_DIR=~/packages
+
+mkdir -p $PACKAGES_DIR
+
+echo "Downloading packages"
+
+curl -o $PACKAGES_DIR https://github.com/spark/particle-agent/releases/download/v0.1.0-1/particle-agent_0.1.0-1_all.deb
+curl -o $PACKAGES_DIR https://github.com/spark/ruby-unicode-display-width/releases/download/debian%2F1.1.1-1/ruby-unicode-display-width_1.1.1-1_all.deb
+curl -o $PACKAGES_DIR https://github.com/spark/ruby-whirly/releases/download/debian%2F0.2.3-1/ruby-whirly_0.2.3-1_all.deb
+curl -o $PACKAGES_DIR https://github.com/spark/ruby-particlerb/releases/download/debian%2F1.2.0-1/ruby-particlerb_1.2.0-1_all.deb
+
+echo "Installing packages"
+sudo dpkg --install $PACKAGES_DIR/*.deb
+sudo apt install -f
+
+particle-agent setup
+

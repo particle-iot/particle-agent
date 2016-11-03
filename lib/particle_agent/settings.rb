@@ -21,11 +21,18 @@ module ParticleAgent
 
     def save
       settings_str = JSON.pretty_generate(values)
+      ensure_directory_exists(path)
       IO.write(path, settings_str)
     end
 
     def default_path
       Config.settings_path
     end
+
+    def ensure_directory_exists(filename)
+      dirname = File.dirname(filename)
+      FileUtils.mkdir_p(dirname, mode: 0o755) unless File.directory?(dirname)
+    end
+
   end
 end

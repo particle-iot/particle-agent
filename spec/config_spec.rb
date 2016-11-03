@@ -12,7 +12,7 @@ describe ParticleAgent::Config do
   end
 
   it "finds the global run path" do
-    expected = "/var/run/particle"
+    expected = "/var/lib/particle"
     assert_equal expected, ParticleAgent::Config.run_path
   end
 end

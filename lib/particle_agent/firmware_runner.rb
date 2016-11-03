@@ -1,4 +1,5 @@
 require "particle_agent/config"
+require "fileutils"
 
 module ParticleAgent
   # Responsible for running one firmware executable
@@ -11,6 +12,7 @@ module ParticleAgent
 
     def run!(daemon)
       until daemon.quit?
+        apply_ota
         if firmware_exist?
           create_pipes
           run_firmware
@@ -24,8 +26,19 @@ module ParticleAgent
 
     private
 
+    def apply_ota
+      if ota_exist?
+        FileUtils.chmod 0o744, ota_executable_path
+        FileUtils.mv ota_executable_path, firmware_executable_path
+      end
+    end
+
     def firmware_exist?
       File.exist? firmware_executable_path
+    end
+
+    def ota_exist?
+      File.exist? ota_executable_path
     end
 
     def stdin_pipe
@@ -66,6 +79,10 @@ module ParticleAgent
 
     def firmware_executable_path
       File.join path, Config.firmware_executable
+    end
+
+    def ota_executable_path
+      File.join path, Config.ota_executable
     end
 
     def firmware_args

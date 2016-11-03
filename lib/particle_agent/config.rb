@@ -16,6 +16,11 @@ module ParticleAgent
       "firmware.bin"
     end
 
+    # The name of the file where the Over-The-Air update firmware is saved
+    def self.ota_executable
+      "output.bin"
+    end
+
     # The named pipe that will be connected to stdin for the device
     def self.stdin_pipe_name
       "stdin"
@@ -38,7 +43,7 @@ module ParticleAgent
 
     # The path where runtime configuration like user apps and keys are kept
     # Can be overwritten for tests
-    @run_path = "/var/run/particle"
+    @run_path = "/var/lib/particle"
     def self.run_path
       @run_path
     end

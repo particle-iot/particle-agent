@@ -17,7 +17,7 @@ module ParticleAgent
 
       puts "Starting agent"
 
-      start_firmware_runners
+      start_firmware_runners daemon
 
       sleep 1 until daemon.quit?
 
@@ -28,7 +28,7 @@ module ParticleAgent
       settings.load
     end
 
-    def start_firmware_runners
+    def start_firmware_runners(daemon)
       puts "No firmware to run." if firmware_paths.empty?
 
       firmware_paths.map do |firmware_path|

@@ -3,6 +3,15 @@
 This program supervises the Particle firmware executable running on
 Raspberry Pi.
 
+## Installing
+
+Install the particle-agent Debian package by running this command on
+your Raspberry Pi:
+
+```
+curl https://raw.githubusercontent.com/spark/particle-agent/master/bin/cloud-install | bash
+```
+
 ## Architecture
 
 Particle Agent is a Ruby application. The logic lives inside <lib>
@@ -21,14 +30,6 @@ stop.
 The service description for the Agent service is a System V init script in
 <debian/particle-agent.init>.
 
-## Installing the service
-
-Install the particle-agent Debian package by running this command on
-your Raspberry Pi:
-
-```
-curl https://raw.githubusercontent.com/spark/particle-agent/master/bin/cloud-install | bash
-```
 
 ## Manually Installing the service
 

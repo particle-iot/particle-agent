@@ -38,12 +38,12 @@ module ParticleAgent
     def run!
       load_settings
       title "Let's connect your Raspberry Pi to the Particle Cloud!\n"
-      if reenter_credentials
+      if keep_credentials
+        auth_client
+      else
         prompt_credentials
         perform_login
         save_credentials
-      else
-        auth_client
       end
 
       prompt_device_id
@@ -80,17 +80,17 @@ module ParticleAgent
       settings.load
     end
 
-    def reenter_credentials
+    def keep_credentials
       username = settings.values["username"]
       if username
         prompt.say "You are already logged in as #{color(username, :highlight)}."
-        prompt.agree "Do you want to log in as a different user? " do |q|
+        prompt.agree "Do you want to stay logged in as this user? " do |q|
           q.default = "yes"
         end
       else
         info "Log in with your Particle account"
         info "Don't have an account yet? Create one at #{color('https://login.particle.io', :link)}"
-        true
+        false
       end
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength

@@ -18,5 +18,8 @@ echo "Installing packages"
 sudo dpkg --install $PACKAGES_DIR/*.deb
 sudo apt install -f
 
+# Flush stdin
+while read -r -t 0; do read -r; done
+
 sudo particle-agent setup
 

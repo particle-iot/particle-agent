@@ -23,22 +23,12 @@ The service description for the Agent service is a System V init script in
 
 ## Installing the service
 
-Install the particle-agent Debian package ==> see the GitHub release page.
+Install the particle-agent Debian package by running this command on
+your Raspberry Pi:
 
-Copy the packages to a Raspberry Pi
-
-particle-agent_0.1.0-1_all.deb
-ruby-unicode-display-width_1.1.1-1_all.deb
-ruby-particlerb_1.2.0-1_all.deb
-ruby-whirly_0.2.3-1_all.deb
-
-`sudo dpkg --install *.deb`
-
-`sudo apt install -f`
-
-
-
-TODO: Update this section when the install workflow is determined.
+```
+curl https://raw.githubusercontent.com/spark/particle-agent/master/bin/cloud-install | bash
+```
 
 ## Manually Installing the service
 

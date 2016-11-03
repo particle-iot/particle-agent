@@ -1,4 +1,4 @@
-# Particle Agent [![Build Status](https://travis-ci.com/spark/particle-agent.svg?token=xZbAFMKBu94uE5pFYFFK&branch=master)](https://travis-ci.com/spark/particle-agent)
+# Particle Agent [![Build Status](https://travis-ci.org/spark/particle-agent.svg?branch=master)](https://travis-ci.org/spark/particle-agent)
 
 This program supervises the Particle firmware executable running on
 Raspberry Pi.

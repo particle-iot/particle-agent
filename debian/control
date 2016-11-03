@@ -29,4 +29,6 @@ Depends: ruby | ruby-interpreter,
          ruby-whirly (>= 0.2),
          ${misc:Depends},
          ${shlibs:Depends}
-Description: This program supervises the Particle firmware executable running on Raspberry Pi
+Description: Particle firmware on the Raspberry Pi
+ This program allows connecting a Raspberry Pi to the Particle Cloud.
+ It supervises the Particle firmware executable running on Raspberry Pi.

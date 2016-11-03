@@ -41,7 +41,7 @@ case $1 in
     log_end_msg $?
     rm -f $PIDFILE
     ;;
-  restart)
+  restart|force-reload)
     $0 stop
     sleep 1
     $0 start
@@ -50,7 +50,7 @@ case $1 in
     status_of_proc -p $PIDFILE "$DAEMON" "$NAME" && exit 0 || exit $?
     ;;
   *)
-    echo "Usage: $0 {start|stop|restart|status}"
+    echo "Usage: $0 {start|stop|restart|force-reload|status}"
     exit 2
     ;;
 esac

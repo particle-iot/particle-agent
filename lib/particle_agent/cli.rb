@@ -5,8 +5,8 @@ module ParticleAgent
   # Entry point for the Particle Pi command line interface
   class CLI < Thor
     desc "setup", "Connect your Raspberry Pi to the Particle Cloud"
-    option :username
-    option :password
+    option :api_endpoint
+    option :server_key
     def setup
       Setup.new(options).run!
     end

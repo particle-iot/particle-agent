@@ -15,8 +15,12 @@ module ParticleAgent
   class ClaimError < StandardError
   end
 
+  class ProvisioningError < StandardError
+  end
+
   # CLI command to set up the Rapsberry Pi as a Particle device
   class Setup
+    attr_reader :custom_server_key_path
     attr_reader :username, :password
     attr_reader :token
     attr_reader :device_id
@@ -24,8 +28,8 @@ module ParticleAgent
     attr_reader :prompt
     attr_reader :settings
     def initialize(options)
-      @user = options[:user]
-      @password = options[:password]
+      configure_client(options)
+      @custom_server_key_path = options[:server_key]
       @prompt = HighLine.new
       @token = nil
       @device_id = nil
@@ -46,7 +50,7 @@ module ParticleAgent
         save_credentials
       end
 
-      prompt_device_id
+      get_device_id
       ensure_device_path_exists
       save_device_id
       prompt_device_name
@@ -72,8 +76,15 @@ module ParticleAgent
     rescue ClaimError => e
       error "#{e.message}. ==> The fix would be to ensure tinker is running."
 
+    rescue ProvisioningError => e
+      error e.message
+
     rescue Faraday::ClientError
       error "Network error. Check your internet connection and try again"
+    end
+
+    def configure_client(options)
+      Particle.api_endpoint = options[:api_endpoint] if options[:api_endpoint]
     end
 
     def load_settings
@@ -97,12 +108,10 @@ module ParticleAgent
 
     def prompt_credentials
       @username = prompt.ask("Email address: ") do |q|
-        q.default = username
         q.responses[:ask_on_error] = :question
         q.validate = /@/
       end
       @password = prompt.ask("Password: ") do |q|
-        q.default = password
         q.echo = false
       end
     end
@@ -126,12 +135,23 @@ module ParticleAgent
       Particle.access_token = settings.values["token"]
     end
 
-    def prompt_device_id
-      prompt.say "For the alpha phase, you should have received a device ID for the Raspberry Pi"
-      @device_id = prompt.ask "Device ID: " do |q|
-        q.validate = /^[0-9a-z]{24}$/
-        q.default = (settings.values["devices"] || []).first
-      end
+    def get_device_id
+      @device_id = if existing_device_id
+                     existing_device_id
+                   else
+                     provision_device_id
+                   end
+    end
+
+    def existing_device_id
+      (settings.values["devices"] || []).first
+    end
+
+    def provision_device_id
+      device = Particle.provision_device product_id: Config.product_id
+      device.id
+    rescue Particle::Forbidden => e
+      raise ProvisioningError, e.short_message
     end
 
     def prompt_device_name
@@ -157,7 +177,7 @@ module ParticleAgent
     end
 
     def ensure_server_key_exists
-      FileUtils.cp default_server_key_path, server_key_path unless File.exist?(server_key_path)
+      FileUtils.cp device_server_key_path, server_key_path unless File.exist?(server_key_path)
     end
 
     def ensure_firmware_exists
@@ -182,6 +202,10 @@ module ParticleAgent
 
     def server_key_path
       File.join device_path, "server_key.der"
+    end
+
+    def device_server_key_path
+      custom_server_key_path || default_server_key_path
     end
 
     def default_server_key_path

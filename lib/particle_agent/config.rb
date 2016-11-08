@@ -41,6 +41,11 @@ module ParticleAgent
       File.join share_path, "keys/server_key.der"
     end
 
+    # The product ID for the Raspberry Pi
+    def self.product_id
+      31
+    end
+
     # The path where runtime configuration like user apps and keys are kept
     # Can be overwritten for tests
     @run_path = "/var/lib/particle"

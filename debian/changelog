@@ -1,3 +1,9 @@
+particle-agent (0.1.0-3) UNRELEASED; urgency=medium
+
+  * Allow passing device id to setup
+
+ -- Julien Vanier <julien@particle.io>  Tue, 09 Nov 2016 12:41:45 -0400
+
 particle-agent (0.1.0-2) UNRELEASED; urgency=medium
 
   * Add device provisioning

@@ -7,6 +7,7 @@ module ParticleAgent
     desc "setup", "Connect your Raspberry Pi to the Particle Cloud"
     option :api_endpoint
     option :server_key
+    option :id
     def setup
       Setup.new(options).run!
     end

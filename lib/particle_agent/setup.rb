@@ -30,9 +30,9 @@ module ParticleAgent
     def initialize(options)
       configure_client(options)
       @custom_server_key_path = options[:server_key]
+      @device_id = options[:id]
       @prompt = HighLine.new
       @token = nil
-      @device_id = nil
       @name = nil
       @settings = Settings.new
     end
@@ -136,11 +136,11 @@ module ParticleAgent
     end
 
     def get_device_id
-      @device_id = if existing_device_id
-                     existing_device_id
-                   else
-                     provision_device_id
-                   end
+      @device_id ||= if existing_device_id
+                       existing_device_id
+                     else
+                       provision_device_id
+                     end
     end
 
     def existing_device_id

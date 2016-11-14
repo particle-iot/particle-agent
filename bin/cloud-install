@@ -17,7 +17,11 @@ curl -# -L --create-dirs \
   https://github.com/spark/ruby-particlerb/releases/download/debian%2F${PARTICLERB_VER}/ruby-particlerb_${PARTICLERB_VER}_all.deb -o $PACKAGES_DIR/ruby-particlerb_${PARTICLERB_VER}_all.deb
 
 echo -e "\nInstalling packages\n"
-sudo dpkg --install $PACKAGES_DIR/*.deb
+sudo dpkg --install \
+  $PACKAGES_DIR/particle-agent_${AGENT_VER}_all.deb \
+  $PACKAGES_DIR/ruby-unicode-display-width_${UNICODE_DISPLAY_WIDTH_VER}_all.deb \
+  $PACKAGES_DIR/ruby-whirly_${WHIRLY_VER}_all.deb \
+  $PACKAGES_DIR/ruby-particlerb_${PARTICLERB_VER}_all.deb
 sudo apt-get install -f -y
 
 # Flush stdin

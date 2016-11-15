@@ -9,7 +9,7 @@ Install the particle-agent Debian package by running this command on
 your Raspberry Pi:
 
 ```
-bash <( curl -s https://raw.githubusercontent.com/spark/particle-agent/master/bin/cloud-install )
+bash <( curl -sL https://particle.io/install-pi )
 ```
 
 ## Architecture

@@ -13,6 +13,6 @@ describe ParticleAgent::Config do
 
   it "finds the global run path" do
     expected = "/var/lib/particle"
-    assert_equal expected, ParticleAgent::Config.run_path
+    assert_equal expected, ParticleAgent::Config.lib_path
   end
 end

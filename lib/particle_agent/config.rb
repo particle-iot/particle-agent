@@ -3,12 +3,12 @@ module ParticleAgent
   module Config
     # Where the settings JSON is stored
     def self.settings_path
-      File.join run_path, "settings.json"
+      File.join lib_path, "settings.json"
     end
 
     # Each subdirectory in this path holds one device firmware and keys
     def self.devices_path
-      File.join run_path, "devices"
+      File.join lib_path, "devices"
     end
 
     # The name of the ELF executable for the device firmware
@@ -46,15 +46,20 @@ module ParticleAgent
       31
     end
 
-    # The path where runtime configuration like user apps and keys are kept
-    # Can be overwritten for tests
-    @run_path = "/var/lib/particle"
-    def self.run_path
-      @run_path
+    # The system logs
+    def self.logs_path
+      "/var/log/particle-agent.log"
     end
 
-    def self.run_path=(path)
-      @run_path = path
+    # The path where persistent configuration like user apps and keys are kept
+    # Can be overwritten for tests
+    @lib_path = "/var/lib/particle"
+    def self.lib_path
+      @lib_path
+    end
+
+    def self.lib_path=(path)
+      @lib_path = path
     end
 
     # The path where data files for the app are kept

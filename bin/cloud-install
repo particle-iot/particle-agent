@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGES_DIR=~/packages
+PACKAGES_DIR=/tmp/particle-agent-packages-$BASHPID
 AGENT_VER=0.1.0-5
 UNICODE_DISPLAY_WIDTH_VER=1.1.1-1
 WHIRLY_VER=0.2.3-1

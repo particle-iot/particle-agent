@@ -22,6 +22,7 @@ module ParticleAgent
         link:      [:blue, :bold],
         highlight: [:yellow, :bold],
         error:     [:red, :bold],
+        command:   [:yellow],
       }
     end
 

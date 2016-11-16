@@ -4,6 +4,7 @@ require "particlerb"
 require "particle_agent/spinner"
 require "particle_agent/config"
 require "particle_agent/settings"
+require "particle_agent/string_patches"
 
 module ParticleAgent
   class LoginFailedError < StandardError
@@ -44,20 +45,21 @@ module ParticleAgent
       title "Let's connect your Raspberry Pi to the Particle Cloud!\n"
       if keep_credentials
         auth_client
+        restore_device_id
       else
         prompt_credentials
         perform_login
         save_credentials
       end
 
-      get_device_id
+      provision_device_id
       ensure_device_path_exists
       save_device_id
       prompt_device_name
       save_device_name
       generate_device_key
       ensure_server_key_exists
-      ensure_firmware_exists
+      copy_tinker_firmware
 
       Spinner.show "Claiming the device to your Particle account" do
         publish_device_key
@@ -66,7 +68,7 @@ module ParticleAgent
         rename_device
       end
 
-      info "Done! Go to #{color('https://build.particle.io', :link)} to flash code to your Raspberry Pi"
+      post_install_message
     rescue LoginFailedError => e
       error e.message
 
@@ -78,6 +80,9 @@ module ParticleAgent
 
     rescue ProvisioningError => e
       error e.message
+
+    rescue Particle::Error => e
+      error "Particle cloud error. #{e.short_message}"
 
     rescue Faraday::ClientError
       error "Network error. Check your internet connection and try again"
@@ -135,12 +140,12 @@ module ParticleAgent
       Particle.access_token = settings.values["token"]
     end
 
-    def get_device_id
-      @device_id ||= if existing_device_id
-                       existing_device_id
-                     else
-                       provision_device_id
-                     end
+    def restore_device_id
+      @device_id ||= existing_device_id
+    end
+
+    def provision_device_id
+      @device_id ||= provision_device_id
     end
 
     def existing_device_id
@@ -180,8 +185,8 @@ module ParticleAgent
       FileUtils.cp device_server_key_path, server_key_path unless File.exist?(server_key_path)
     end
 
-    def ensure_firmware_exists
-      FileUtils.cp default_executable_path, firmware_executable_path unless File.exist?(firmware_executable_path)
+    def copy_tinker_firmware
+      FileUtils.install tinker_executable_path, firmware_executable_path
     end
 
     def device_id_path
@@ -216,7 +221,7 @@ module ParticleAgent
       @device_path ||= File.join Config.devices_path, device_id
     end
 
-    def default_executable_path
+    def tinker_executable_path
       Config.tinker_path
     end
 
@@ -238,6 +243,10 @@ module ParticleAgent
 
     def claim_device(tries = 5)
       Particle.device(device_id).claim
+
+    rescue Particle::Forbidden
+      # FIXME: the cloud returns an error when trying to claim your own device
+      # So just ignore the error for now
     rescue Particle::Error
       tries -= 1
       unless tries.zero?
@@ -250,6 +259,23 @@ module ParticleAgent
 
     def rename_device
       Particle.device(device_id).rename(name)
+    end
+
+    def post_install_message
+      info <<-MESSAGE.unindent
+        Done! Your Raspberry Pi is now connected to the #{color('Particle Cloud', :title)}.
+
+        Your Raspberry Pi is running the default Particle app called #{color('Tinker', :highlight)}.
+        #{color('Tinker', :highlight)} allows you to toggle pins with the Particle Mobile App.
+          #{color('https://docs.particle.io/guide/getting-started/tinker/raspberry-pi/', :link)}
+
+        When you are ready to write your own apps, check out the code examples.
+          #{color('https://docs.particle.io/guide/getting-started/examples/raspberry-pi/', :link)}
+        
+        For more details about the Particle on Raspberry Pi:
+          Run #{color('sudo particle-agent help', :command)}
+          #{color('https://docs.particle.io/reference/particle-agent/', :link)}
+      MESSAGE
     end
 
     def title(message)

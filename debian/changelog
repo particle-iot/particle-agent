@@ -1,3 +1,10 @@
+particle-agent (0.1.0-7) UNRELEASED; urgency=medium
+
+  * Add serial command command
+  * Update post install message
+
+ -- Julien Vanier <julien@particle.io>  Wed, 16 Nov 2016 12:41:45 -0400
+
 particle-agent (0.1.0-6) UNRELEASED; urgency=medium
 
   * Add logs command

@@ -47,7 +47,6 @@ module ParticleAgent
         auth_client
         restore_device_id
       else
-        prompt_credentials
         perform_login
         save_credentials
       end
@@ -69,17 +68,14 @@ module ParticleAgent
       end
 
       post_install_message
-    rescue LoginFailedError => e
-      error e.message
-
     rescue KeyUpdateError => e
       error "#{e.message}. Are you sure this device is not owned by another account?"
 
     rescue ClaimError => e
-      error "#{e.message}. ==> The fix would be to ensure tinker is running."
+      error "Error claiming the device. #{e.message}"
 
     rescue ProvisioningError => e
-      error e.message
+      error "Error getting a device ID. #{e.message}"
 
     rescue Particle::Error => e
       error "Particle cloud error. #{e.short_message}"
@@ -111,6 +107,14 @@ module ParticleAgent
     end
     # rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
+    def perform_login
+      prompt_credentials
+      send_credentials
+    rescue LoginFailedError => e
+      error e.message
+      retry
+    end
+
     def prompt_credentials
       @username = prompt.ask("Email address: ") do |q|
         q.responses[:ask_on_error] = :question
@@ -121,7 +125,7 @@ module ParticleAgent
       end
     end
 
-    def perform_login
+    def send_credentials
       Spinner.show "Logging in" do
         particle_token = Particle.login(username, password, expires_in: 0)
         @token = particle_token.id

@@ -41,17 +41,17 @@ module ParticleAgent
       File.exist? ota_executable_path
     end
 
-    def stdin_pipe
+    def stdin_pipe_path
       File.join path, Config.stdin_pipe_name
     end
 
-    def stdout_pipe
+    def stdout_pipe_path
       File.join path, Config.stdout_pipe_name
     end
 
     def create_pipes
-      system("mkfifo #{stdin_pipe}") unless File.exist?(stdin_pipe)
-      system("mkfifo #{stdout_pipe}") unless File.exist?(stdout_pipe)
+      system("mkfifo #{stdin_pipe_path}") unless File.exist?(stdin_pipe_path)
+      system("mkfifo #{stdout_pipe_path}") unless File.exist?(stdout_pipe_path)
     end
 
     def run_firmware
@@ -59,8 +59,8 @@ module ParticleAgent
         firmware_env,
         firmware_executable_path,
         *firmware_args,
-        in: [stdin_pipe, "r+"],
-        out: [stdout_pipe, "w+"],
+        in: [stdin_pipe_path, "r+"],
+        out: [stdout_pipe_path, "w+"],
         # stderr is shared with the agent process
         chdir: settings_path
       )

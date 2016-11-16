@@ -1,6 +1,7 @@
 require "thor"
 require "particle_agent/setup"
 require "particle_agent/logs"
+require "particle_agent/serial"
 
 module ParticleAgent
   # Entry point for the Particle Pi command line interface
@@ -24,6 +25,16 @@ module ParticleAgent
       desc: "Print all log lines and exit"
     def logs
       Logs.new(options).run!
+    end
+
+    desc "serial", "Show the output of Serial.print in the running firmware"
+    def serial
+      Serial.new(options).run!
+    end
+
+    # All commands must be run with sudo for now
+    def self.basename
+      "sudo #{super}"
     end
   end
 end

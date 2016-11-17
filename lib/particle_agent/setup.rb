@@ -51,7 +51,7 @@ module ParticleAgent
         save_credentials
       end
 
-      provision_device_id
+      ensure_device_id
       ensure_device_path_exists
       save_device_id
       prompt_device_name
@@ -148,7 +148,7 @@ module ParticleAgent
       @device_id ||= existing_device_id
     end
 
-    def provision_device_id
+    def ensure_device_id
       @device_id ||= provision_device_id
     end
 
@@ -276,8 +276,8 @@ module ParticleAgent
         When you are ready to write your own apps, check out the code examples.
           #{color('https://docs.particle.io/guide/getting-started/examples/raspberry-pi/', :link)}
         
-        For more details about the Particle on Raspberry Pi:
-          Run #{color('sudo particle-agent help', :command)}
+        For more details about the Particle on Raspberry Pi, run:
+          #{color('sudo particle-agent help', :command)}
           #{color('https://docs.particle.io/reference/particle-agent/', :link)}
       MESSAGE
     end

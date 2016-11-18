@@ -27,10 +27,9 @@ module ParticleAgent
     private
 
     def apply_ota
-      if ota_exist?
-        FileUtils.chmod 0o744, ota_executable_path
-        FileUtils.mv ota_executable_path, firmware_executable_path
-      end
+      return unless ota_exist?
+      FileUtils.chmod 0o744, ota_executable_path
+      FileUtils.mv ota_executable_path, firmware_executable_path
     end
 
     def firmware_exist?

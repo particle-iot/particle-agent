@@ -9,6 +9,7 @@ module ParticleAgent
   class Daemon
     attr_reader :options
     attr_accessor :exit_with_error
+    attr_reader :daemon_pid
 
     def initialize(options = {})
       @options = options
@@ -25,6 +26,7 @@ module ParticleAgent
     def run!
       check_pid
       daemonize if daemonize?
+      set_daemon_pid
       write_pid if pidfile
       trap_signals
 
@@ -47,6 +49,10 @@ module ParticleAgent
       @quit
     end
 
+    def daemon_process?
+      Process.pid == daemon_pid
+    end
+
     def daemonize?
       options[:daemonize]
     end
@@ -59,6 +65,10 @@ module ParticleAgent
       options[:pidfile]
     end
 
+    def quit_delay
+      options[:quit_delay] || 3
+    end
+
     private
 
     # Daemonize will change working directory so expand relative paths now
@@ -67,11 +77,15 @@ module ParticleAgent
       options[:pidfile] = File.expand_path(pidfile) if pidfile
     end
 
+    def set_daemon_pid
+      @daemon_pid = Process.pid
+    end
+
     def write_pid
       ensure_directory_exists(pidfile)
       begin
         File.open(pidfile, ::File::CREAT | ::File::EXCL | ::File::WRONLY) do |f|
-          f.write Process.pid
+          f.write daemon_pid
         end
         at_exit { delete_pid }
       rescue Errno::EEXIST
@@ -136,16 +150,28 @@ module ParticleAgent
     end
 
     def trap_signals
-      [:QUIT, :TERM, :INT].each do |signal|
-        trap signal do
-          unless @quit
-            puts "Got signal to quit gracefully"
-            # Tell main loop to stop
-            @quit = true
-            # Kill subprocesses
-            Process.kill("QUIT", 0)
-          end
-        end
+      [:TERM, :INT].each do |signal|
+        trap(signal) { terminate_daemon }
+      end
+    end
+
+    def terminate_daemon
+      return if quit?
+      return unless daemon_process?
+      # Tell main loop to stop
+      @quit = true
+      terminate_sub_processes
+    end
+
+    def terminate_sub_processes
+      puts "Signaling firmware to shut down cleanly"
+      # Kill subprocesses
+      Process.kill(:INT, 0)
+      # Force quit stragglers
+      Thread.new do
+        sleep quit_delay
+        puts "Firmware didn't shut down cleanly. Signaling to force close."
+        Process.kill(:TERM, 0)
       end
     end
   end

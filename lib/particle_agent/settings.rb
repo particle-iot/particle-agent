@@ -33,6 +33,5 @@ module ParticleAgent
       dirname = File.dirname(filename)
       FileUtils.mkdir_p(dirname, mode: 0o755) unless File.directory?(dirname)
     end
-
   end
 end

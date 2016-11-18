@@ -20,6 +20,7 @@ module ParticleAgent
   end
 
   # CLI command to set up the Rapsberry Pi as a Particle device
+  # rubocop:disable Metrics/ClassLength
   class Setup
     attr_reader :custom_server_key_path
     attr_reader :username, :password
@@ -251,6 +252,7 @@ module ParticleAgent
     rescue Particle::Forbidden
       # FIXME: the cloud returns an error when trying to claim your own device
       # So just ignore the error for now
+      return
     rescue Particle::Error
       tries -= 1
       unless tries.zero?
@@ -275,7 +277,7 @@ module ParticleAgent
 
         When you are ready to write your own apps, check out the code examples.
           #{color('https://docs.particle.io/guide/getting-started/examples/raspberry-pi/', :link)}
-        
+
         For more details about the Particle on Raspberry Pi, run:
           #{color('sudo particle-agent help', :command)}
           #{color('https://docs.particle.io/reference/particle-agent/', :link)}
@@ -299,3 +301,4 @@ module ParticleAgent
     end
   end
 end
+# rubocop:enable Metrics/ClassLength

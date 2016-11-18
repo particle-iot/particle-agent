@@ -9,11 +9,9 @@ module ParticleAgent
   # Show a spinning icon on the terminal during a long operation
   class Spinner
     def self.show(message = nil, &block)
-      begin
-        Whirly.start status: message, &block
-      ensure
-        Whirly.stop
-      end
+      Whirly.start status: message, &block
+    ensure
+      Whirly.stop
     end
 
     def self.status=(message)

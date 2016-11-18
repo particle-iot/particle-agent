@@ -1,6 +1,7 @@
-particle-agent (0.1.0-8) UNRELEASED; urgency=medium
+particle-agent (0.1.0-9) UNRELEASED; urgency=medium
 
-  * Fix setup
+  * start/stop/restart commands
+  * Force quit firmware if it doesn't shut down
 
  -- Julien Vanier <julien@particle.io>  Thu, 17 Nov 2016 12:41:45 -0400
 

@@ -33,7 +33,7 @@ module ParticleAgent
     def connect_serial
       loop do
         read_io = [$stdin, firmware_stdout_pipe]
-        read_ready,_,_ = IO.select(read_io)
+        read_ready, = IO.select(read_io)
 
         case read_ready[0]
         when $stdin
@@ -59,11 +59,11 @@ module ParticleAgent
     end
 
     def firmware_stdin_pipe
-      @firmware_stdin_pipe ||= File.open(firmware_stdin_pipe_path, 'w+')
+      @firmware_stdin_pipe ||= File.open(firmware_stdin_pipe_path, "w+")
     end
 
     def firmware_stdout_pipe
-      @firmware_stdout_pipe ||= File.open(firmware_stdout_pipe_path, 'r+')
+      @firmware_stdout_pipe ||= File.open(firmware_stdout_pipe_path, "r+")
     end
 
     def firmware_stdin_pipe_path

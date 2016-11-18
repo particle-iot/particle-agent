@@ -69,51 +69,79 @@ describe ParticleAgent::Daemon do
     # fork to avoid exiting the current process
     fork do
       daemon.run! do
-        rd.close
-        wr.write "Done"
-        wr.close
+        wr.puts Process.getpgrp
       end
     end
-
     Process.wait
-    wr.close
-    assert_equal "Done", rd.read
+
+    this_process_group = Process.getpgrp
+    daemon_process_group = rd.gets.to_i
+    refute_equal this_process_group, daemon_process_group
   end
 
-  it "traps signals and quits the subtask" do
-    pid_rd, pid_wr = IO.pipe
+  it "traps signals and interrupts the subtask" do
     rd, wr = IO.pipe
     daemon = ParticleAgent::Daemon.new(daemonize: true)
 
     fork do
       daemon.run! do |d|
-        pid_rd.close
-        pid_wr.write Process.pid
-        pid_wr.close
+        wr.puts Process.pid
 
-        # Subtask that doen"t quit until it receives a signal
+        # Subtask that doen't quit until it receives a signal
         fork do
           subtask_quit = false
 
-          trap(:QUIT) { subtask_quit = true }
-          sleep 0.01 until subtask_quit
+          trap(:INT) { subtask_quit = true }
 
-          rd.close
-          wr.write "Quit"
+          wr.puts "Start"
+          sleep 0.01 until subtask_quit
+          wr.puts "Quit"
         end
 
         sleep 0.01 until d.quit?
         Process.wait
       end
     end
-
-    pid_wr.close
-    daemon_pid = pid_rd.read.to_i
-    Process.kill("QUIT", daemon_pid)
-
-    wr.close
-    assert_equal "Quit", rd.read
     Process.wait
+
+    daemon_pid = rd.gets.to_i
+    assert_equal "Start", rd.gets.chomp
+    Process.kill(:TERM, daemon_pid)
+
+    assert_equal "Quit", rd.gets.chomp
+  end
+
+  it "force quits subtasks after a delay" do
+    rd, wr = IO.pipe
+    daemon = ParticleAgent::Daemon.new(daemonize: true, quit_delay: 0.01)
+
+    fork do
+      daemon.run! do |d|
+        wr.puts Process.pid
+
+        # Subtask that doesn't quit cleanly
+        fork do
+          trap(:INT) {}
+          trap(:TERM, "DEFAULT")
+
+          wr.puts "Start"
+          loop do
+            sleep 1
+          end
+        end
+
+        sleep 0.01 until d.quit?
+        Process.wait
+        wr.puts "Subtask quit"
+      end
+    end
+    Process.wait
+
+    daemon_pid = rd.gets.to_i
+    assert_equal "Start", rd.gets.chomp
+    Process.kill(:TERM, daemon_pid)
+
+    assert_equal "Subtask quit", rd.gets.chomp
   end
 
   it "logs to a file" do

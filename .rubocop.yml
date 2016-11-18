@@ -24,6 +24,9 @@ Style/TrailingCommaInLiteral:
 Metrics/ClassLength:
   Max: 200
 
+# Allow sligthly longer methods
+Metrics/MethodLength:
+  Max: 15
 
 # Allow ; to separate several expressions on the same line.
 Style/Semicolon:

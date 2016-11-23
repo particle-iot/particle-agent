@@ -5,10 +5,16 @@ require "fileutils"
 module ParticleAgent
   # Responsible for running one firmware executable
   class FirmwareRunner
+    # N crashes in T seconds before safe mode
+    CRASHES_BEFORE_SAFE_MODE = 5
+    TIME_BEFORE_SAFE_MODE = 30
+
     attr_reader :path
+    attr_reader :exit_times
 
     def initialize(path)
       @path = path
+      @exit_times = []
     end
 
     def run!(daemon)
@@ -19,6 +25,7 @@ module ParticleAgent
           run_firmware
 
           puts "Quitting firmware gracefully"
+          check_safe_mode
         else
           sleep 1
         end
@@ -92,6 +99,27 @@ module ParticleAgent
 
     def firmware_args
       ["-v", "70"]
+    end
+
+    def check_safe_mode
+      # Keep last N firmware exit times
+      exit_times.unshift Time.now
+      exit_times.slice! CRASHES_BEFORE_SAFE_MODE..-1
+
+      # N firmware crashes within N seconds
+      oldest_exit = exit_times[CRASHES_BEFORE_SAFE_MODE - 1]
+      if oldest_exit && Time.now - oldest_exit < TIME_BEFORE_SAFE_MODE
+        apply_safe_mode
+      end
+    end
+
+    def apply_safe_mode
+      puts "Entering safe mode because firmware exited too many times in a row. Reverting to Tinker"
+      FileUtils.mv tinker_executable_path, firmware_executable_path
+    end
+
+    def tinker_executable_path
+      Config.tinker_path
     end
   end
 end

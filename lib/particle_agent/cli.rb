@@ -3,6 +3,7 @@ require "particle_agent/setup"
 require "particle_agent/logs"
 require "particle_agent/serial"
 require "particle_agent/service"
+require "particle_agent/version"
 
 module ParticleAgent
   # Entry point for the Particle Pi command line interface
@@ -48,9 +49,21 @@ module ParticleAgent
       Service.new(options).restart!
     end
 
-    desc "status", "Shows if the agent and firmware are running"
+    desc "status", "Show if the agent and firmware are running"
     def status
       Service.new(options).status!
+    end
+
+    map ["--version", "-v"] => :version
+    desc "version", "Show version"
+    def version
+      puts "particle-agent #{VERSION}"
+    end
+
+    def self.help(shell, subcommand = false)
+      shell.say "particle-agent #{VERSION}"
+      shell.say
+      super
     end
   end
 end

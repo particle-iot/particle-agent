@@ -1,3 +1,11 @@
+particle-agent (0.2.0-1) UNRELEASED; urgency=medium
+
+  * automatically run particle-agent as sudo
+  * safe mode
+  * version commands
+
+ -- Julien Vanier <julien@particle.io>  Wed, 23 Nov 2016 12:41:45 -0400
+
 particle-agent (0.1.0-9) UNRELEASED; urgency=medium
 
   * start/stop/restart commands

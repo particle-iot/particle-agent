@@ -1,4 +1,5 @@
 require "particle_agent/config"
+require "particle_agent/firmware_validator"
 require "fileutils"
 
 module ParticleAgent
@@ -28,6 +29,7 @@ module ParticleAgent
 
     def apply_ota
       return unless ota_exist?
+      return unless ota_valid?
       FileUtils.chmod 0o744, ota_executable_path
       FileUtils.mv ota_executable_path, firmware_executable_path
     end
@@ -38,6 +40,10 @@ module ParticleAgent
 
     def ota_exist?
       File.exist? ota_executable_path
+    end
+
+    def ota_valid?
+      FirmwareValidator.new(ota_executable_path).valid?
     end
 
     def stdin_pipe_path

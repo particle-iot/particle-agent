@@ -1,8 +1,5 @@
 #!/usr/bin/env ruby
 
-require "bundler/setup"
-require "particle_agent/cli"
-
 unless ENV['PARTICLE_AGENT_NO_SUDO']
   # Ensure always ran as root
   user_id = `id -u`.to_i
@@ -11,6 +8,9 @@ unless ENV['PARTICLE_AGENT_NO_SUDO']
     exec "sudo", $PROGRAM_NAME, *ARGV
   end
 end
+
+require "bundler/setup"
+require "particle_agent/cli"
 
 begin
   ParticleAgent::CLI.start(ARGV)

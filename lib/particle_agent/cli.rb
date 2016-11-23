@@ -52,10 +52,5 @@ module ParticleAgent
     def status
       Service.new(options).status!
     end
-
-    # All commands must be run with sudo for now
-    def self.basename
-      "sudo #{super}"
-    end
   end
 end

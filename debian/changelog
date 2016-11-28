@@ -1,3 +1,9 @@
+particle-agent (0.2.1-1) UNRELEASED; urgency=medium
+
+  * [BUGFIX] safe mode should copy Tinker not move it
+
+ -- Julien Vanier <julien@particle.io>  Mon, 28 Nov 2016 12:41:45 -0400
+
 particle-agent (0.2.0-1) UNRELEASED; urgency=medium
 
   * automatically run particle-agent as sudo

@@ -115,7 +115,7 @@ module ParticleAgent
 
     def apply_safe_mode
       puts "Entering safe mode because firmware exited too many times in a row. Reverting to Tinker"
-      FileUtils.mv tinker_executable_path, firmware_executable_path
+      FileUtils.cp tinker_executable_path, firmware_executable_path
     end
 
     def tinker_executable_path

@@ -1,3 +1,9 @@
+particle-agent (0.2.2-1) UNRELEASED; urgency=medium
+
+  * Update Tinker to not change special pins (I2C, SPI) to INPUT
+
+ -- Julien Vanier <julien@particle.io>  Tue, 29 Nov 2016 12:41:45 -0400
+
 particle-agent (0.2.1-1) UNRELEASED; urgency=medium
 
   * [BUGFIX] safe mode should copy Tinker not move it

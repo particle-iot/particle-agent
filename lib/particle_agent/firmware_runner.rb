@@ -22,10 +22,10 @@ module ParticleAgent
         apply_ota
         if firmware_exist?
           create_pipes
-          run_firmware
+          status = run_firmware
 
           puts "Quitting firmware gracefully"
-          check_safe_mode
+          check_safe_mode(status)
         else
           sleep 1
         end
@@ -79,7 +79,9 @@ module ParticleAgent
 
       _pid, status = Process.waitpid2(pid)
       puts "Firmware exited with status #{status}"
+      status
     end
+
 
     def settings_path
       path
@@ -101,7 +103,9 @@ module ParticleAgent
       ["-v", "70"]
     end
 
-    def check_safe_mode
+    def check_safe_mode(status)
+      return if dns_crash?(status)
+
       # Keep last N firmware exit times
       exit_times.unshift Time.now
       exit_times.slice! CRASHES_BEFORE_SAFE_MODE..-1
@@ -111,6 +115,12 @@ module ParticleAgent
       if oldest_exit && Time.now - oldest_exit < TIME_BEFORE_SAFE_MODE
         apply_safe_mode
       end
+    end
+
+    # Currently ignore SIGABRT (exception thrown) in the safe mode
+    # Happens mostly with DNS failure
+    def dns_crash?(status)
+      status.signaled? && status.termsig == Signal.list["ABRT"]
     end
 
     def apply_safe_mode

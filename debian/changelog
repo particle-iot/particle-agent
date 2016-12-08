@@ -1,3 +1,9 @@
+particle-agent (0.2.3-1) UNRELEASED; urgency=medium
+
+  * [BUGFIX] Make safe mode less agressive so the firmware is not lost on reboot
+
+ -- Julien Vanier <julien@particle.io>  Wed, 07 Dec 2016 12:41:45 -0400
+
 particle-agent (0.2.2-1) UNRELEASED; urgency=medium
 
   * Update Tinker to not change special pins (I2C, SPI) to INPUT

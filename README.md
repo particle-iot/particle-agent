@@ -105,19 +105,19 @@ gem2deb -p particle-agent *.gem
 Communicate with child processes
 https://www.rubytapas.com/2016/06/16/episode-419-subprocesses-part-4-redirection/
 
-`
+```
 input, output = IO.pipe
 
-pid = Process.spawm "exec", "arg", out: output
+pid = Process.spawn "exec", "arg", out: output
 
 Process.waitpid(pid)
 input.close
 input.read
-`
+```
 
 >>
 
-`
+```
 rd, wr = IO.pipe
 
 if fork
@@ -133,16 +133,16 @@ else
   wr.write "Hi Dad"
   wr.close
 end
-`
+```
 
 >>
 
 Trap SIGCHLD when child exits
 https://www.rubytapas.com/2016/06/30/episode-423-subprocesses-part-5-sigchld/
 
-`
+```
 trap("CHLD") do
   pid = Process.waitpid(-1)
   pids[pid] = :done
 end
-`
+```

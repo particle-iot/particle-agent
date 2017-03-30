@@ -1,3 +1,9 @@
+particle-agent (0.2.4-1) UNRELEASED; urgency=medium
+
+  * Update Tinker to support Linux kernel 4.9
+
+ -- Julien Vanier <julien@particle.io>  Thu, 30 Mar 2017 12:41:45 -0400
+
 particle-agent (0.2.3-1) UNRELEASED; urgency=medium
 
   * [BUGFIX] Make safe mode less agressive so the firmware is not lost on reboot

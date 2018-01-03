@@ -12,8 +12,8 @@ Build-Depends: debhelper (>= 9~),
                ruby-thor (>= 0.19),
                ruby-whirly (>= 0.2)
 Standards-Version: 3.9.7
-Vcs-Git: https://github.com/spark/particle-agent.git
-Vcs-Browser: https://github.com/sparks/particle-agent.git
+Vcs-Git: https://github.com/particle-iot/particle-agent.git
+Vcs-Browser: https://github.com/particle-iots/particle-agent.git
 Homepage: http://www.particle.io
 Testsuite: autopkgtest-pkg-ruby
 XS-Ruby-Versions: all

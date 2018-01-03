@@ -11,10 +11,10 @@ echo -e "Installing the Particle Agent\n"
 echo -e "Downloading packages\n"
 
 curl -# -L --create-dirs \
-  https://github.com/spark/particle-agent/releases/download/v${AGENT_VER}/particle-agent_${AGENT_VER}_all.deb -o $PACKAGES_DIR/particle-agent_${AGENT_VER}_all.deb \
-  https://github.com/spark/ruby-unicode-display-width/releases/download/debian%2F${UNICODE_DISPLAY_WIDTH_VER}/ruby-unicode-display-width_${UNICODE_DISPLAY_WIDTH_VER}_all.deb -o $PACKAGES_DIR/ruby-unicode-display-width_${UNICODE_DISPLAY_WIDTH_VER}_all.deb \
-  https://github.com/spark/ruby-whirly/releases/download/debian%2F${WHIRLY_VER}/ruby-whirly_${WHIRLY_VER}_all.deb -o $PACKAGES_DIR/ruby-whirly_${WHIRLY_VER}_all.deb \
-  https://github.com/spark/ruby-particlerb/releases/download/debian%2F${PARTICLERB_VER}/ruby-particlerb_${PARTICLERB_VER}_all.deb -o $PACKAGES_DIR/ruby-particlerb_${PARTICLERB_VER}_all.deb
+  https://github.com/particle-iot/particle-agent/releases/download/v${AGENT_VER}/particle-agent_${AGENT_VER}_all.deb -o $PACKAGES_DIR/particle-agent_${AGENT_VER}_all.deb \
+  https://github.com/particle-iot/ruby-unicode-display-width/releases/download/debian%2F${UNICODE_DISPLAY_WIDTH_VER}/ruby-unicode-display-width_${UNICODE_DISPLAY_WIDTH_VER}_all.deb -o $PACKAGES_DIR/ruby-unicode-display-width_${UNICODE_DISPLAY_WIDTH_VER}_all.deb \
+  https://github.com/particle-iot/ruby-whirly/releases/download/debian%2F${WHIRLY_VER}/ruby-whirly_${WHIRLY_VER}_all.deb -o $PACKAGES_DIR/ruby-whirly_${WHIRLY_VER}_all.deb \
+  https://github.com/particle-iot/ruby-particlerb/releases/download/debian%2F${PARTICLERB_VER}/ruby-particlerb_${PARTICLERB_VER}_all.deb -o $PACKAGES_DIR/ruby-particlerb_${PARTICLERB_VER}_all.deb
 
 echo -e "\nInstalling packages\n"
 sudo apt-get install -y libssl-dev
